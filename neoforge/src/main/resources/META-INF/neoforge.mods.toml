@@ -1,0 +1,38 @@
+modLoader = "javafml" #//mandatory
+loaderVersion = "*" # // mandatory. Allow all forge versions as we are definding what Minecraft versions we requre later on
+license = "GPL"
+issueTrackerURL = "${issues}"
+
+
+[[mods]] #//mandatory
+    modId = "example_mod" #//mandatory
+    version = "${version}" #//mandatory, gets the version number from jar populated by the build.gradle script
+    displayName = "${mod_name}" #//mandatory
+    authors = ["me", "someone else", "a third person"] # Should be done with `$authors`, but architectury complains
+    #//updateJSONURL="https://change.me.example.invalid/updates.json" # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
+    displayURL = "${homepage}"
+    description = "${description}" #//mandatory. The description text for the mod
+    logoFile = "assets/example_mod/icon.png"
+    catalogueImageIcon = "assets/example_mod/icon.png"
+    credits = "Massive thanks to: ..."
+    #// if not set defaults to "false"
+    clientSideOnly = "false"
+    #// if not set side defaults to "BOTH"
+    #// change to "BOTH" when adding server support
+    side = "BOTH"
+    #// Allow any version to be present (or not) on the server
+    acceptableRemoteVersions = "*"
+
+# We may need this to make forge (lexforge) & neoforge work together
+# Forgix does some renaming...
+# FIXME: Forgix error: ClassNotFoundException:neode.the_build_craft.example_mod.neoforge.mixins.NeoforgeMixinPlugin
+[[mixins]]
+    config = "example_mod.neoforge.mixins.json"
+
+[[dependencies.example_mod]]
+    modId = "minecraft"
+    mandatory = true  # Forge syntax
+    type = "required" # Neoforge syntax
+    versionRange = "${compatible_forgemc_versions}" # Where we set what version of mc it is avalible for
+    ordering = "NONE"
+    side = "BOTH"

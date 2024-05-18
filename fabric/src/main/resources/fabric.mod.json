@@ -1,0 +1,61 @@
+{
+    "schemaVersion": 1,
+    "id": "example_mod",
+    "version": "${version}",
+    
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": $authors,
+    
+    "contact": {
+        "homepage": "${homepage}",
+        "sources": "${source}",
+        "issues": "${issues}"
+    },
+    
+    "license": "GPL-3",
+    "icon": "assets/example_mod/icon.png",
+    
+    "accessWidener": "example_mod.accesswidener",
+    
+    "environment": "*",
+    "entrypoints": {
+        "client": [
+            "de.the_build_craft.example_mod.fabric.FabricMain"
+        ],
+        "server": [
+            "de.the_build_craft.example_mod.fabric.FabricMain"
+        ],
+        "modmenu": [
+            "de.the_build_craft.example_mod.fabric.wrappers.ModMenuIntegration"
+        ]
+    },
+    
+    "mixins": [
+        "example_mod.fabric.mixins.json"
+    ],
+    
+    "depends": {
+        "fabricloader": "*",
+        "fabric-api-base": "*",
+        "fabric-lifecycle-events-v1": "*",
+        "fabric-resource-loader-v0": "*",
+        "minecraft": $compatible_minecraft_versions,
+        "java": ">=${java_version}"
+    },
+    
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "${discord}"
+            }
+        }
+    },
+    
+    "suggests": {
+        "some_mod": "*"
+    },
+    
+    "breaks": $fabric_incompatibility_list,
+    "recommends": $fabric_recommend_list
+}

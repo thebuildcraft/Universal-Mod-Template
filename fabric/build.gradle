@@ -1,0 +1,111 @@
+/*
+ *    This file is part of the Universal Mod Template
+ *    licensed under the GNU GPL v3 License.
+ *    (some parts of this file are originally from the Distant Horizons mod by James Seibel)
+ *
+ *    Copyright (C) 2024  Leander Knüttel
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+plugins {
+    id "fabric-loom" version "1.6-SNAPSHOT"
+}
+
+loom {
+    accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener")
+    
+    // "runs" isn't required, but when we do need it then it can be useful
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("../run")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("../run")
+        }
+    }
+}
+
+remapJar {
+    inputFile = shadowJar.archiveFile
+    dependsOn shadowJar
+}
+
+configurations {
+    // The addModJar basically embeds the mod to the built jar
+    addModJar
+    include.extendsFrom addModJar
+    modImplementation.extendsFrom addModJar
+}
+
+def addMod(path, enabled) {
+    if (enabled == "2")
+        dependencies { modImplementation(path) }
+    else if (enabled == "1")
+        dependencies { modCompileOnly(path) }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.layered() {
+        // Mojmap mappings
+        officialMojangMappings()
+        // Parchment mappings (it adds parameter mappings & javadoc)
+        parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}@zip")
+    }
+    // Fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:$rootProject.fabric_api_version"
+
+    // Mod Menu
+    if (rootProject.modmenu_version != "") {
+        modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
+    }
+
+    //use addModJar() to include a library
+    //addModJar(fabricApi.module("fabric-lifecycle-events-v1", rootProject.fabric_api_version))
+
+    //addMod can be used, to control it via the version.property
+    //addMod("example.maven:some_mod:${rootProject.some_mod_version}", rootProject.enable_some_mod)
+}
+
+task deleteResources(type: Delete) {
+    delete file("build/resources/main")
+}
+
+processResources {
+    dependsOn(copyCoreResources)
+    dependsOn(copyCommonLoaderResources)
+}
+
+runClient {
+    dependsOn(copyCoreResources)
+    dependsOn(copyCommonLoaderResources)
+//    jvmArgs([ "-XX:-OmitStackTraceInFastThrow", minecraftMemoryJavaArg ])
+    finalizedBy(deleteResources)
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}

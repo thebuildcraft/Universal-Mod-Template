@@ -1,0 +1,501 @@
+/*
+ *    This file is part of the Universal Mod Template
+ *    licensed under the GNU GPL v3 License.
+ *    (some parts of this file are originally from the Distant Horizons mod by James Seibel)
+ *
+ *    Copyright (C) 2024  Leander Knüttel
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+plugins {
+    id "java"
+
+    // Plugin to put dependencies inside our final jar
+    //id "com.github.johnrengelman.shadow" version '7.1.2' apply false
+    id "com.github.johnrengelman.shadow" version '8.1.1' apply false
+
+    // Plugin to create merged jars
+    id "io.github.pacifistmc.forgix" version "1.2.9"
+
+    // Manifold preprocessor
+    id "systems.manifold.manifold-gradle-plugin" version "0.0.2-alpha"
+
+    // Architectury is used here only as a replacement for forge's own loom
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+}
+
+
+/**
+ * Creates the list of preprocessors to use.
+ *
+ * @param mcVers array of all MC versions
+ * @param mcIndex array index of the currently active MC version
+ */
+def writeBuildGradlePredefine(List<String> mcVers, int mcIndex)
+{
+    // Build the list of preprocessors to use
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("# DON'T TOUCH THIS FILE, This is handled by the build script\n");
+    
+    
+    for (int i = 0; i < mcVers.size(); i++)
+    {
+        String verStr = mcVers[i].replace(".", "_");
+        sb.append("MC_" + verStr + "=" + i.toString() + "\n");
+        
+        if (mcIndex == i)
+            sb.append("MC_VER=" + i.toString() + "\n");
+    }
+    
+
+    // Check if this is a development build
+    if (mod_version.toLowerCase().contains("dev"))
+    {
+        // WARNING: only use this for logging, we don't want to have confusion
+        // when a method doesn't work correctly in the release build.
+        sb.append("DEV_BUILD=\n");
+    }
+
+    new File(projectDir, "build.properties").text = sb.toString()
+}
+
+
+// Transfers the values set in settings.gradle to the rest of the project
+project.gradle.ext.getProperties().each { prop ->
+    rootProject.ext.set(prop.key, prop.value)
+//    println "Added prop [key:" + prop.key + ", value:" + prop.value + "]"
+}
+// Sets up manifold stuff
+writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
+
+
+
+
+// Sets up the version string (the name we use for our jar)
+rootProject.versionStr = rootProject.mod_version + "-" + rootProject.file_name //+ rootProject.minecraft_version // + "-" + new Date().format("yyyy_MM_dd_HH_mm")
+// Forgix settings (used for merging jars)
+forgix {
+    group = "de.the_build_craft.example_mod"
+    mergedJarName = "ExampleMod-${rootProject.versionStr}.jar"
+
+    if (findProject(":forge"))
+        forge {
+            jarLocation = "build/libs/example_mod-forge-${rootProject.versionStr}.jar"
+        }
+
+    //FIXME NeoForge Mixins are kinda broken
+    //if (findProject(":neoforge"))
+    //    custom {
+    //        projectName = "neoforge"
+    //        jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+    //    }
+
+    //if (findProject(":neoforge"))
+    //    neoforge {
+    //        projectName = "neoforge"
+    //        jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+
+    //        mixin "example_mod.neoforge.mixins.json"
+    //    }
+
+    if (findProject(":fabric"))
+        fabric {
+            jarLocation = "build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+        }
+
+    if (findProject(":quilt"))
+        quilt {
+            jarLocation = "build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+        }
+
+    removeDuplicate "de.the_build_craft.example_mod"
+}
+
+subprojects { p ->
+    // Does the same as "p == project(":common") || p == project(":fabric") || p == project(":quilt")  || p == project(":forge") || p == project("WhateverWeAddLaterOn")"
+    // Useful later on so we dont have duplicated code
+    def isMinecraftSubProject = true//p != project(":core") && p != project(":api")
+
+
+    // Apply plugins
+    apply plugin: "java"
+    apply plugin: "com.github.johnrengelman.shadow"
+    if (isMinecraftSubProject)
+        apply plugin: "systems.manifold.manifold-gradle-plugin"
+    
+    // Apply forge's loom
+    if (
+            (findProject(":forge") && p == project(":forge")) ||
+                    (findProject(":neoforge") && p == project(":neoforge"))
+    )
+    apply plugin: "dev.architectury.loom"
+
+
+    // Set the manifold version (may not be required tough)
+    manifold {
+        manifoldVersion = rootProject.manifold_version
+    }
+    
+
+    // set up custom configurations (configurations are a way to handle dependencies) 
+    configurations {
+        // extends the shadowJar configuration
+        shadowMe
+        // have implemented dependencies automatically embedded in the final jar
+        implementation.extendsFrom(shadowMe)
+
+        // Configuration fpr core & api
+        coreProjects
+        shadowMe.extendsFrom(coreProjects)
+
+
+        // FIXME this additional configuration is necessary because forge
+        //  needs forgeRuntimeLibrary, although adding it to shadowMe
+        //  causes runtime issues where the libraries aren't properly added
+        forgeShadowMe
+        // this should match shadowMe pretty closely
+        implementation.extendsFrom(forgeShadowMe)
+        shadowMe.extendsFrom(forgeShadowMe)
+        forgeRuntimeLibrary.extendsFrom(forgeShadowMe)
+
+
+        if (isMinecraftSubProject && p != project(":common")) {
+            // Shadow common
+            common
+            shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+            compileClasspath.extendsFrom common
+            runtimeClasspath.extendsFrom common
+            if (findProject(":forge"))
+                developmentForge.extendsFrom common
+            if (findProject(":neoforge"))
+                developmentNeoForge.extendsFrom common
+            compileClasspath.extendsFrom coreProjects
+            runtimeClasspath.extendsFrom coreProjects
+            if (findProject(":forge"))
+                developmentForge.extendsFrom coreProjects
+            if (findProject(":neoforge"))
+                developmentNeoForge.extendsFrom coreProjects
+
+            if (findProject(":fabricLike") && p != project(":fabricLike")) {
+                // Shadow fabricLike
+                fabricLike
+                shadowFabricLike
+                compileClasspath.extendsFrom fabricLike
+                runtimeClasspath.extendsFrom fabricLike
+            }
+        }
+    }
+
+
+    dependencies {
+        // Manifold
+        if (isMinecraftSubProject) {
+            annotationProcessor("systems.manifold:manifold-preprocessor:${rootProject.manifold_version}")
+        }
+
+        /////// ...left here as examples
+
+        // Log4j
+        //implementation("org.apache.logging.log4j:log4j-api:${rootProject.log4j_version}")
+        //implementation("org.apache.logging.log4j:log4j-core:${rootProject.log4j_version}")
+
+        // Remember, for lwjgl dependencies that arent included in Minecraft, you need to also need to add it to the ShadowJar thing
+        //forgeShadowMe("org.lwjgl:lwjgl-jawt:${rootProject.lwjgl_version}") {
+        //    exclude group: "org.lwjgl", module: "lwjgl" // This module is imported by Minecraft so exclude it
+        //}     // this is relocated down below...
+
+        ///////
+
+        // Add common
+        if (isMinecraftSubProject && p != project(":common")) {
+            // Common
+            common(project(":common")) { transitive false }
+            shadowCommon(project(":common")) { transitive false }
+
+            // FabricLike
+            if (findProject(":fabricLike") && p != project(":fabricLike")) {
+                fabricLike(project(path: ":fabricLike")) { transitive false }
+                shadowFabricLike(project(path: ":fabricLike")) { transitive false }
+            }
+        }
+    }
+
+
+    shadowJar {
+        configurations = [project.configurations.shadowMe]
+        if (isMinecraftSubProject && p != project(":common")) {
+            configurations.push(project.configurations.shadowCommon) // Shadow the common subproject
+            relocate "de.the_build_craft.example_mod.common", "loaderCommon.${p.name}.de.the_build_craft.example_mod.common" // Move the loader files to a different location
+        
+            if (findProject(":fabricLike") && p != project(":fabricLike")) {
+                configurations.push(project.configurations.shadowFabricLike) // Shadow the fabricLike subproject
+                relocate "de.the_build_craft.example_mod.fabriclike", "loaderCommon.${p.name}.de.the_build_craft.example_mod.fabriclike" // Move the loader files to a different location
+            }
+        }
+        def librariesLocation = "example_mod.libraries"
+
+        // Example Library to relocate
+        //relocate "org.lwjgl.system.jawt", "${librariesLocation}.lwjgl.system.jawt"
+
+        mergeServiceFiles()
+    }
+    // Using jar.finalizedBy(shadowJar) causes issues so we do this scuffed bypass
+    jar.dependsOn(shadowJar)
+
+
+    // Put stuff from gradle.properties into the mod info
+    processResources {
+        def resourceTargets = [ // Location of where to inject the properties
+
+                                // Properties for each of the loaders
+                                "fabric.mod.json",
+                                "quilt.mod.json",
+                                "META-INF/mods.toml",
+                                "META-INF/neoforge.mods.toml",//for MC >= 1.20.5
+
+                                // The mixins for each of the loaders
+                                "example_mod."+ p.name +".fabricLike.mixins.json"
+        ]
+        def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
+
+        // Fix forge version numbering system as it is weird
+        // For whatever reason forge uses [1.18, 1.18.1, 1.18.2) instead of the standard ["1.18", "1.18.1", "1.18.2"]
+        def compatible_forgemc_versions = "${compatible_minecraft_versions}".replaceAll("\"", "").replaceAll("]", ",)")
+//        println compatible_forgemc_versions
+
+        // Quilt's custom contributors system
+        // This has to be like
+        // "Person": "Developer", "Another person": "Developer"
+        def quilt_contributors = []
+        def mod_author_list = mod_authors.replaceAll("\"", "").replace("[", "").replace("]", "").split(",")
+        for (dev in mod_author_list) {
+            quilt_contributors.push("\"${dev.strip()}\": \"Developer\"")
+        }
+        quilt_contributors.reverse()
+        //println quilt_contributors.join(", ")
+
+        // TODO: Find something we can use so we can basically re-map only when the jar is shadowed and relocated
+//        println p.tasks.findByName('shadowJar')
+
+
+        // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
+        def replaceProperties = [
+                version                      : mod_version,
+                mod_name                     : mod_readable_name,
+                group                        : maven_group,
+                authors                      : mod_authors,
+                description                  : mod_description,
+                homepage                     : mod_homepage,
+                source                       : mod_source,
+                issues                       : mod_issues,
+                discord                      : mod_discord,
+
+                minecraft_version            : minecraft_version,
+                compatible_minecraft_versions: compatible_minecraft_versions,
+                compatible_forgemc_versions  : compatible_forgemc_versions,
+                java_version                 : java_version,
+                quilt_contributors           : "{"+quilt_contributors.join(", ")+"}",
+
+                fabric_incompatibility_list  : fabric_incompatibility_list,
+                fabric_recommend_list  : fabric_recommend_list,
+        ]
+        
+        // replace any properties in the sub-projects with the values defined here
+        inputs.properties replaceProperties
+        replaceProperties.put "project", project
+        filesMatching(resourceTargets) {
+            expand replaceProperties
+        }
+        
+        intoTargets.each { target ->
+            if (file(target).exists()) {
+                copy {
+                    from(sourceSets.main.resources) {
+                        include resourceTargets
+                        expand replaceProperties
+                    }
+                    into target
+                }
+            }
+        }
+
+
+
+        // ==================== Delete un-needed files ====================
+        exclude "example_mod.fabricLike.mixins.json" // This isnt required atm, but we will be using it later
+
+//        exclude "*.example_mod.accesswidener"
+////        include "${accessWidenerVersion}.example_mod.accesswidener"
+
+        // Jank solution to remove all unused accesswideners
+        // The line above would work..., except that (neo)forge (well, mainly architectury) requires the original accesswidener file, meaning we require this jank solution to keep it
+        exclude { file ->
+            if (file.name.contains(".example_mod.accesswidener") && file.name != "${accessWidenerVersion}.example_mod.accesswidener") {
+                return true
+            }
+            return false
+        }
+    }
+}
+
+allprojects { p ->
+    // Does the same as "p == project(":common") || p == project(":fabric") || p == project(":quilt")  || p == project(":forge") || p == project("WhateverWeAddLaterOn")"
+    // Useful later on so we dont have duplicated code
+    def isMinecraftSubProject = true//p != project(":core") && p != project(":api")
+
+
+    apply plugin: "java"
+    apply plugin: "maven-publish"
+    
+    archivesBaseName = rootProject.mod_name
+    version = project.name + "-" + rootProject.versionStr
+    group = rootProject.maven_group
+    
+    // this is the text that appears at the top of the overview (home) page
+    // and is used when bookmarking a page
+    javadoc.title = rootProject.mod_name + "-" + project.name
+
+    // Some annotations arent "technically" part of the official java standard,
+    //  so we define it ourself here
+    javadoc {
+        configure( options ) {
+            tags(
+                    'todo:X"',
+                    'apiNote:a:API Note:',
+                    'implSpec:a:Implementation Requirements:',
+                    'implNote:a:Implementation Note:'
+            )
+        }
+    }
+
+
+    repositories {
+        // The central repo
+        mavenCentral()
+
+        // Used for Google's Collect library
+        maven { url "https://repo.enonic.com/public/" }
+
+        // For parchment mappings
+        maven { url "https://maven.parchmentmc.org" }
+
+        // For Architectury API
+        maven { url "https://maven.architectury.dev" }
+
+        // For Git repositories
+        maven { url "https://jitpack.io" }
+
+        // For Manifold Preprocessor
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+
+        // Required for importing Modrinth mods
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
+
+        // Required for importing CursedForge mods
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+
+        // Required for ModMenu
+        maven { url "https://maven.terraformersmc.com/" }
+
+        // Required for ClothConfig
+        maven { url "https://maven.shedaniel.me/" }
+
+        // Required for Mixins & VanillaGradle
+        maven { url "https://repo.spongepowered.org/maven/" }
+
+        // These 4 are for importing mods that arnt on CursedForge, Modrinth, GitHub, GitLab or anywhere opensource
+        flatDir {
+            dirs "${rootDir}/mods/fabric"
+            content {
+                includeGroup "fabric-mod"
+            }
+        }
+        flatDir {
+            dirs "${rootDir}/mods/quilt"
+            content {
+                includeGroup "quilt-mod"
+            }
+        }
+        flatDir {
+            dirs "${rootDir}/mods/forge"
+            content {
+                includeGroup "forge-mod"
+            }
+        }
+        flatDir {
+            dirs "${rootDir}/mods/neoforge"
+            content {
+                includeGroup "neoforge-mod"
+            }
+        }
+    }
+
+    task copyCommonLoaderResources(type: Copy) {
+        from project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener")
+        into(file(p.file("build/resources/main")))
+        rename "${accessWidenerVersion}.example_mod.accesswidener", "example_mod.accesswidener"
+
+
+        // Move the fabricLike mixin to its different places for each subproject
+        if (findProject(":fabricLike")) {
+            from project(":fabricLike").file("src/main/resources/example_mod.fabricLike.mixins.json")
+            into(file(p.file("build/resources/main")))
+            rename "example_mod.fabricLike.mixins.json", "example_mod." + p.name + ".fabricLike.mixins.json"
+        }
+    }
+
+    task copyCoreResources(type: Copy) {
+        from fileTree(project(":common").file("src/main/resources/assets"))
+        into p.file("build/resources/main/assets")
+    }
+
+    tasks.withType(JavaCompile) {
+        //if (isMinecraftSubProject) {
+            options.release = rootProject.java_version as Integer
+            options.compilerArgs += ["-Xplugin:Manifold"]
+        //} else {
+        //    options.release = 8; // Core & Api should use Java 8 no matter what
+        //    //options.release = rootProject.java_version as Integer // But if you want to test some stuff, then this can be enabled
+        //}
+        options.encoding = "UTF-8"
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
+
+
+// Delete the merged folder when running clean
+task cleanMergedJars() {
+    def mergedFolder = file("Merged")
+    if (mergedFolder.exists()) {
+        delete(mergedFolder)
+    }
+}
+// add cleanMergedJars to the end of the "clean" task
+tasks["clean"].finalizedBy(cleanMergedJars)
