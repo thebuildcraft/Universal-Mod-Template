@@ -17,13 +17,15 @@
  *
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * file changed by: Leander Knüttel
+ * date: 20.05.2024
  */
 
 plugins {
     id "java"
 
     // Plugin to put dependencies inside our final jar
-    //id "com.github.johnrengelman.shadow" version '7.1.2' apply false
     id "com.github.johnrengelman.shadow" version '8.1.1' apply false
 
     // Plugin to create merged jars
@@ -86,40 +88,116 @@ writeBuildGradlePredefine(rootProject.mcVers, rootProject.mcIndex)
 
 // Sets up the version string (the name we use for our jar)
 rootProject.versionStr = rootProject.mod_version + "-" + rootProject.file_name //+ rootProject.minecraft_version // + "-" + new Date().format("yyyy_MM_dd_HH_mm")
+
 // Forgix settings (used for merging jars)
+def mergeFabric = false
+def mergeQuilt = false
+def mergeForge = false
+def mergeNeoForge = false
+
+if (rootProject.hasProperty("forgix_merge")){
+    for (loader in ((String) rootProject.forgix_merge).split(",")) {
+        def loaderName = loader.strip() // Strip it in case a space is added before or after the comma
+        println "Adding loader " + loaderName + " to Forgix Merge"
+        switch (loader){
+            case "fabric":
+                mergeFabric = true
+                break
+            case "quilt":
+                mergeQuilt = true
+                break
+            case "forge":
+                mergeForge = true
+                break
+            case "neoforge":
+                mergeNeoForge = true
+        }
+    }
+}
+else{
+    println "Adding all loaders to Forgix Merge because nothing was specified!"
+    mergeFabric = true
+    mergeQuilt = true
+    mergeForge = true
+    mergeNeoForge = true
+}
+
 forgix {
     group = "de.the_build_craft.example_mod"
     mergedJarName = "ExampleMod-${rootProject.versionStr}.jar"
 
-    if (findProject(":forge"))
-        forge {
-            jarLocation = "build/libs/example_mod-forge-${rootProject.versionStr}.jar"
+    if (findProject(":forge")) {
+        if (mergeForge) {
+            forge {
+                jarLocation = "build/libs/example_mod-forge-${rootProject.versionStr}.jar"
+                mixin "example_mod.forge.mixins.json"
+            }
         }
-
-    //FIXME NeoForge Mixins are kinda broken
-    //if (findProject(":neoforge"))
-    //    custom {
-    //        projectName = "neoforge"
-    //        jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+        else { // hack to not let it merge automatically
+            forge {
+                jarLocation = "invalid_build/libs/example_mod-forge-${rootProject.versionStr}.jar"
+                mixin "invalid_example_mod.forge.mixins.json"
+            }
+        }
+    }
+    // FIXME this breaks forge mixins
+    if (findProject(":neoforge")) {
+        if (mergeNeoForge){
+            neoforge {
+                jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+                mixin "example_mod.neoforge.mixins.json"
+            }
+        }
+        else { // hack to not let it merge automatically
+            neoforge {
+                jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+                mixin "invalid_example_mod.neoforge.mixins.json"
+            }
+        }
+    }
+    // FIXME this brakes neoforge mixins
+    //if (findProject(":neoforge")) {
+    //    if (mergeNeoForge){
+    //        custom {
+    //            projectName = "neoforge"
+    //            jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+    //            //mixin "example_mod.neoforge.mixins.json"
+    //        }
     //    }
-
-    //if (findProject(":neoforge"))
-    //    neoforge {
-    //        projectName = "neoforge"
-    //        jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-
-    //        mixin "example_mod.neoforge.mixins.json"
+    //    else { // hack to not let it merge automatically
+    //        custom {
+    //            projectName = "neoforge"
+    //            jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+    //            //mixin "invalid_example_mod.neoforge.mixins.json"
+    //        }
     //    }
+    //}
 
-    if (findProject(":fabric"))
-        fabric {
-            jarLocation = "build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+    if (findProject(":fabric")){
+        if (mergeFabric){
+            fabric {
+                jarLocation = "build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+            }
         }
+        else { // hack to not let it merge automatically
+            fabric {
+                jarLocation = "invalid_build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+            }
+        }
+    }
 
-    if (findProject(":quilt"))
-        quilt {
-            jarLocation = "build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+    if (findProject(":quilt")){
+        if (mergeQuilt){
+            quilt {
+                jarLocation = "build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+            }
         }
+        else{ // hack to not let it merge automatically
+            quilt {
+                jarLocation = "invalid_build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+            }
+        }
+    }
 
     removeDuplicate "de.the_build_craft.example_mod"
 }
@@ -474,21 +552,21 @@ allprojects { p ->
     }
 
     tasks.withType(JavaCompile) {
-        //if (isMinecraftSubProject) {
-            options.release = rootProject.java_version as Integer
-            options.compilerArgs += ["-Xplugin:Manifold"]
-        //} else {
-        //    options.release = 8; // Core & Api should use Java 8 no matter what
-        //    //options.release = rootProject.java_version as Integer // But if you want to test some stuff, then this can be enabled
-        //}
+        options.release = rootProject.java_version as Integer
+        options.compilerArgs += ["-Xplugin:Manifold"]
         options.encoding = "UTF-8"
+    }
+
+    // Sets the project's actual Java version (it's recommended to use this over the `options.release` method above)
+    java {
+        sourceCompatibility = rootProject.java_version
+        targetCompatibility = rootProject.java_version
     }
 
     java {
         withSourcesJar()
     }
 }
-
 
 // Delete the merged folder when running clean
 task cleanMergedJars() {

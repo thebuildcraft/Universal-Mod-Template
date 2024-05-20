@@ -17,6 +17,9 @@
  *
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * file changed by: Leander Knüttel
+ * date: 20.05.2024
  */
 
 plugins {
@@ -25,7 +28,7 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_21
 
 architectury {
     platformSetupLoomIde()
