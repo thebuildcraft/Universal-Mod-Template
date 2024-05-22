@@ -21,17 +21,9 @@
 
 package de.the_build_craft.example_mod.forge;
 
-import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
 import de.the_build_craft.example_mod.forge.wrappers.ModChecker;
 
-#if MC_VER > MC_1_17_1
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-#else
-//FIXME 1.17.1 and below Forge client commands
-#endif
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 #if MC_VER == MC_1_16_5
@@ -57,16 +49,13 @@ import net.minecraftforge.client.ConfigGuiHandler;
 import java.util.Random;
 #else
 #endif
-#if MC_VER <= MC_1_18_2
-import net.minecraft.commands.Commands;
-#endif
 
 /**
  * main entry point on Forge
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class ForgeMain extends AbstractModInitializer
@@ -77,42 +66,19 @@ public class ForgeMain extends AbstractModInitializer
 		// Register the mod initializer (Actual event registration is done in the different proxies)
 		FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> this.onInitializeClient());
 		FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLDedicatedServerSetupEvent e) -> this.onInitializeServer());
-		MinecraftForge.EVENT_BUS.addListener(this::onCommandRegister);
-		#if MC_VER > MC_1_17_1
-		MinecraftForge.EVENT_BUS.addListener(this::onClientCommandRegister);
-		#else
-		//FIXME 1.17.1 and below Forge client commands
-		#endif
 	}
-	public void onCommandRegister(RegisterCommandsEvent event) {
-		#if MC_VER > MC_1_18_2
-		registerServerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
-		#else
-		registerServerCommands(event.getDispatcher(), (event.getEnvironment() == Commands.CommandSelection.ALL) || (event.getEnvironment() == Commands.CommandSelection.DEDICATED));
-		#endif
-	}
-	#if MC_VER > MC_1_17_1
-	public void onClientCommandRegister(RegisterClientCommandsEvent event) {
-		#if MC_VER > MC_1_18_2
-		registerClientCommands(/*(CommandDispatcher) */event.getDispatcher(), event.getBuildContext());
-		#else
-		registerClientCommands(/*(CommandDispatcher) */event.getDispatcher());
-		#endif
-	}
-	#else
-	//FIXME 1.17.1 and below Forge client commands
-	#endif
-
 
 	@Override
 	public void onInitializeClient(){
 		super.onInitializeClient();
+
 		//Forge Client init here
 	}
 
 	@Override
 	public void onInitializeServer(){
 		super.onInitializeServer();
+
 		//Forge Server init here
 	}
 	

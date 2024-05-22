@@ -21,7 +21,12 @@
 
 package de.the_build_craft.example_mod.forge;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
+#if MC_VER > MC_1_17_1
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
+#endif
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +36,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class ForgeClientProxy implements AbstractModInitializer.IEventProxy
 {
@@ -41,13 +46,20 @@ public class ForgeClientProxy implements AbstractModInitializer.IEventProxy
 	public void registerEvents()
 	{
 		LOGGER.info("Registering Forge Client Events");
-		//MinecraftForge.EVENT_BUS.register(this);// <-- uncomment this line if registering events !!!
-		//register Forge Client Events here
+
+		#if MC_VER > MC_1_17_1
+		//TODO remove #if once more Events are registered
+		// (Forge throws an error if this line is there, but no event is registered)
+		MinecraftForge.EVENT_BUS.register(this);
+		#endif
+
+		//OR register Forge Client Events here
 	}
-	/* //OR like this
+
+	#if MC_VER > MC_1_17_1
 	@SubscribeEvent
-	public void clientTickEvent(TickEvent.ClientTickEvent event) //<-- event type
-	{
-		//event code goes here
-	}*/
+	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+		ForgeMain.registerClientCommands((CommandDispatcher<ClientCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher());
+	}
+	#endif
 }

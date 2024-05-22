@@ -22,28 +22,15 @@
 package de.the_build_craft.example_mod.common;
 
 import com.mojang.brigadier.CommandDispatcher;
-#if MC_VER > MC_1_18_2
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.synchronization.SuggestionProviders;
-#else
-import com.mojang.brigadier.context.CommandContextBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.network.chat.TextComponent;
-#endif
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import net.minecraft.commands.CommandSourceStack;
-
-import net.minecraft.network.chat.Component;
-
-import org.apache.logging.log4j.Logger;
+import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
+import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
 import org.apache.logging.log4j.LogManager;
-
-import java.util.function.Supplier;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Base for all mod loader initializers 
@@ -51,7 +38,7 @@ import java.util.function.Supplier;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public abstract class AbstractModInitializer
 {
@@ -59,9 +46,6 @@ public abstract class AbstractModInitializer
 	public static final String MOD_NAME = "Example Mod";
 	public static final String VERSION = "1.0.0";
 	public static final Logger LOGGER = LogManager.getLogger("RemotePlayerWaypointsForXaero");
-
-	private CommandDispatcher<CommandSourceStack> commandDispatcher;
-
 	
 	//==================//
 	// abstract methods //
@@ -133,8 +117,6 @@ public abstract class AbstractModInitializer
 		});*/
 	}
 	
-	
-	
 	//===========================//
 	// inner initializer methods //
 	//===========================//
@@ -165,104 +147,52 @@ public abstract class AbstractModInitializer
 		LOGGER.info("Mod Post-Initialized");
 	}*/
 
-	#if MC_VER > MC_1_18_2
-	public void registerServerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext _context, Commands.CommandSelection environment) {
-		//TODO test example command
-		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("server_set_afk_time")
-				.then(argument("player", StringArgumentType.word())
-						.then(argument("time", IntegerArgumentType.integer(0))
-								.executes(context -> {
-									String playerName = StringArgumentType.getString(context, "player");
-									int time = IntegerArgumentType.getInteger(context, "time");
-									#if MC_VER < MC_1_20_1
-									context.getSource().sendSuccess(Component.literal("Set AFK time for " + playerName + " to " + time), true);
-									#else
-									Supplier<Component> supplier = () -> Component.literal("Set AFK time for " + playerName + " to " + time);
-									//or use a normal method
-									//Example:
-									//supplier = this::test;
-									context.getSource().sendSuccess(supplier, true);
-									#endif
-									return 1;
-								})));
-		//don't forget to register it...
-		dispatcher.register(setAfkTimeCommand);
-
-		//register commands here
-	}
-	//Example
-	/*public Component test(){
-		return Component.literal("test");
-	}*/
-	//SuggestionProviders ???
-	public void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext _context){
+	public static void registerClientCommands(CommandDispatcher<ClientCommandSourceStack> dispatcher){
 		//TODO test example client command
 		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("client_set_afk_time")
-				.then(argument("player", StringArgumentType.word())
-						.then(argument("time", IntegerArgumentType.integer(0))
+		LiteralArgumentBuilder<ClientCommandSourceStack> setAfkTimeCommand = literalClient("client_example_command")
+				.then(argumentClient("example_player", StringArgumentType.word())
+						.then(argumentClient("example_time", IntegerArgumentType.integer(0))
 								.executes(context -> {
-									String playerName = StringArgumentType.getString(context, "player");
-									int time = IntegerArgumentType.getInteger(context, "time");
-									#if MC_VER < MC_1_20_1
-									context.getSource().sendSuccess(Component.literal("Set AFK time for " + playerName + " to " + time), true);
-									#else
-									Supplier<Component> supplier = () -> Component.literal("Set AFK time for " + playerName + " to " + time);
-									//or use a normal method
-									//Example:
-									//supplier = this::test;
-									context.getSource().sendSuccess(supplier, true);
-									#endif
+									String example_string = StringArgumentType.getString(context, "example_string");
+									int example_int = IntegerArgumentType.getInteger(context, "example_int");
+									context.getSource().SendFeedback("Example Feedback:  example_string: " + example_string + " example_int: " + example_int);
 									return 1;
 								})));
-		//don't forget to register it...
+		//remember to register it...
 		dispatcher.register(setAfkTimeCommand);
 
-		//register commands here
+		//register client commands here
 	}
-	#else
-	public void registerServerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+
+	public static void registerServerCommands(CommandDispatcher<ServerCommandSourceStack> dispatcher, boolean allOrDedicated) {
 		//TODO test example command
 		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("server_set_afk_time")
-				.then(argument("player", StringArgumentType.word())
-						.then(argument("time", IntegerArgumentType.integer(0))
+		LiteralArgumentBuilder<ServerCommandSourceStack> setAfkTimeCommand = literal("server_example_command")
+				.then(argument("example_player", StringArgumentType.word())
+						.then(argument("example_time", IntegerArgumentType.integer(0))
 								.executes(context -> {
-									String playerName = StringArgumentType.getString(context, "player");
-									int time = IntegerArgumentType.getInteger(context, "time");
-									context.getSource().sendSuccess(new TextComponent("Set AFK time for " + playerName + " to " + time), true);
+									String example_string = StringArgumentType.getString(context, "example_string");
+									int example_int = IntegerArgumentType.getInteger(context, "example_time");
+									context.getSource().SendFeedback("Example Feedback:  example_string: " + example_string + " example_int: " + example_int, true);
 									return 1;
 								})));
-		//don't forget to register it...
+		//remember to register it...
 		dispatcher.register(setAfkTimeCommand);
 
-		//register commands here
+		//register server commands here
 	}
 
-	public void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher){
-		//TODO test example client command
-		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("client_set_afk_time")
-				.then(argument("player", StringArgumentType.word())
-						.then(argument("time", IntegerArgumentType.integer(0))
-								.executes(context -> {
-									String playerName = StringArgumentType.getString(context, "player");
-									int time = IntegerArgumentType.getInteger(context, "time");
-									context.getSource().sendSuccess(new TextComponent("Set AFK time for " + playerName + " to " + time), true);
-									return 1;
-								})));
-		//don't forget to register it...
-		dispatcher.register(setAfkTimeCommand);
-
-		//register commands here
-	}
-	#endif
-
-	private static LiteralArgumentBuilder<CommandSourceStack> literal(String string) {
+	private static LiteralArgumentBuilder<ServerCommandSourceStack> literal(String string) {
 		return LiteralArgumentBuilder.literal(string);
 	}
-	public static <T> RequiredArgumentBuilder<CommandSourceStack, T> argument(String name, ArgumentType<T> type) {
+	private static <T> RequiredArgumentBuilder<ServerCommandSourceStack, T> argument(String name, ArgumentType<T> type) {
+		return RequiredArgumentBuilder.argument(name, type);
+	}
+	private static LiteralArgumentBuilder<ClientCommandSourceStack> literalClient(String string) {
+		return LiteralArgumentBuilder.literal(string);
+	}
+	private static <T> RequiredArgumentBuilder<ClientCommandSourceStack, T> argumentClient(String name, ArgumentType<T> type) {
 		return RequiredArgumentBuilder.argument(name, type);
 	}
 	

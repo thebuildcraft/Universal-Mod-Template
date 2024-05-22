@@ -21,9 +21,13 @@
 
 package de.the_build_craft.example_mod.neoforge;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -31,12 +35,13 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class NeoforgeServerProxy implements AbstractModInitializer.IEventProxy
 {
-	private final boolean isDedicated;
 	private static final Logger LOGGER = AbstractModInitializer.LOGGER;
+
+	private final boolean isDedicated;
 
 	public NeoforgeServerProxy(boolean isDedicated)
 	{
@@ -47,13 +52,17 @@ public class NeoforgeServerProxy implements AbstractModInitializer.IEventProxy
 	public void registerEvents()
 	{
 		LOGGER.info("Registering NeoForge Server Events");
-		//NeoForge.EVENT_BUS.register(this);// <-- uncomment this line if registering events !!!
-		//register NeoForge Server Events here
+
+		NeoForge.EVENT_BUS.register(this);
+
+		//OR register NeoForge Server Events here
 	}
-	/* //OR like this
+
 	@SubscribeEvent
-	public void serverTickEvent(TickEvent.ServerTickEvent event) //<-- event type
-	{
-		//event code goes here
-	}*/
+	public void registerCommands(RegisterCommandsEvent event){
+		NeoforgeMain.registerServerCommands(
+				(CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+				(event.getCommandSelection() == Commands.CommandSelection.ALL)
+						|| (event.getCommandSelection() == Commands.CommandSelection.DEDICATED));
+	}
 }

@@ -21,8 +21,11 @@
 
 package de.the_build_craft.example_mod.neoforge;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +34,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class NeoforgeClientProxy implements AbstractModInitializer.IEventProxy
 {
@@ -41,13 +44,14 @@ public class NeoforgeClientProxy implements AbstractModInitializer.IEventProxy
 	public void registerEvents()
 	{
 		LOGGER.info("Registering NeoForge Client Events");
-		//NeoForge.EVENT_BUS.register(this);// <-- uncomment this line if registering events !!!
-		//register NeoForge Client Events here
+
+		NeoForge.EVENT_BUS.register(this);
+
+		//OR register NeoForge Client Events here
 	}
-	/* //OR like this
+
 	@SubscribeEvent
-	public void clientTickEvent(TickEvent.ClientTickEvent event) //<-- event type
-	{
-		//event code goes here
-	}*/
+	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+		NeoforgeMain.registerClientCommands((CommandDispatcher<ClientCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher());
+	}
 }

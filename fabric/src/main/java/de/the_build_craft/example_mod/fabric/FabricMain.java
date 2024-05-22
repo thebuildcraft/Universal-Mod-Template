@@ -21,41 +21,24 @@
 
 package de.the_build_craft.example_mod.fabric;
 
-import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
 import de.the_build_craft.example_mod.fabric.wrappers.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.DedicatedServerModInitializer;
-#if MC_VER > MC_1_18_2
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-#else
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-#endif
 
 /**
  * main entry point on Fabric
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class FabricMain extends AbstractModInitializer implements ClientModInitializer, DedicatedServerModInitializer
 {
-	//TODO why is this here ??????
-	//private static final ResourceLocation INITIAL_PHASE = ResourceLocation.tryParse("example_mod:dedicated_server_initial");
-	
 	@Override
 	public void onInitializeClient(){
 		loaderType = LoaderType.Fabric;
 		super.onInitializeClient();
-		#if MC_VER > MC_1_18_2
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> registerClientCommands((CommandDispatcher) dispatcher, context));
-		#else
-		//TODO test for MC <= 1.18.2
-		registerClientCommands((CommandDispatcher) ClientCommandManager.DISPATCHER);
-		#endif
 
 		//Fabric Client init here
 	}
@@ -64,7 +47,6 @@ public class FabricMain extends AbstractModInitializer implements ClientModIniti
 	public void onInitializeServer(){
 		loaderType = LoaderType.Fabric;
 		super.onInitializeServer();
-		CommandRegistrationCallback.EVENT.register(this::registerServerCommands);
 
 		//Fabric Server init here
 	}
@@ -88,6 +70,7 @@ public class FabricMain extends AbstractModInitializer implements ClientModIniti
 	{
 		//mod compatibility setup here
 	}
+
 	// TODO can this be removed?
 	/*@Override
 	protected void subscribeClientStartedEvent(Runnable eventHandler) {
@@ -106,5 +89,4 @@ public class FabricMain extends AbstractModInitializer implements ClientModIniti
 	{
 		//setup after init here
 	}*/
-	
 }

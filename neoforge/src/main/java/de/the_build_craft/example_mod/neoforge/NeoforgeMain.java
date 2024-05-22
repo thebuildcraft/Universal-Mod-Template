@@ -21,13 +21,9 @@
 
 package de.the_build_craft.example_mod.neoforge;
 
-import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
 import de.the_build_craft.example_mod.neoforge.wrappers.ModChecker;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
@@ -37,19 +33,12 @@ import net.neoforged.neoforge.client.gui.ModListScreen;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 #endif
 
-import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-
-import java.util.function.Consumer;
-
 /**
  * main entry point on NeoForge
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class NeoforgeMain extends AbstractModInitializer
@@ -60,25 +49,19 @@ public class NeoforgeMain extends AbstractModInitializer
 		// Register the mod initializer (Actual event registration is done in the different proxies)
 		eventBus.addListener((FMLClientSetupEvent e) -> this.onInitializeClient());
 		eventBus.addListener((FMLDedicatedServerSetupEvent e) -> this.onInitializeServer());
-		NeoForge.EVENT_BUS.addListener(this::onCommandRegister);
-		NeoForge.EVENT_BUS.addListener(this::onClientCommandRegister);
-	}
-	public void onCommandRegister(RegisterCommandsEvent event) {
-		registerServerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
-	}
-	public void onClientCommandRegister(RegisterClientCommandsEvent event) {
-		registerClientCommands((CommandDispatcher) event.getDispatcher(), event.getBuildContext());
 	}
 
 	@Override
 	public void onInitializeClient(){
 		super.onInitializeClient();
+
 		//NeoForge Client init here
 	}
 
 	@Override
 	public void onInitializeServer(){
 		super.onInitializeServer();
+
 		//NeoForge Server init here
 	}
 	

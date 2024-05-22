@@ -21,8 +21,12 @@
 
 package de.the_build_craft.example_mod.forge;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
@@ -31,12 +35,13 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class ForgeServerProxy implements AbstractModInitializer.IEventProxy
 {
-	private final boolean isDedicated;
 	private static final Logger LOGGER = AbstractModInitializer.LOGGER;
+
+	private final boolean isDedicated;
 
 	public ForgeServerProxy(boolean isDedicated)
 	{
@@ -47,13 +52,20 @@ public class ForgeServerProxy implements AbstractModInitializer.IEventProxy
 	public void registerEvents()
 	{
 		LOGGER.info("Registering Forge Server Events");
-		//MinecraftForge.EVENT_BUS.register(this);// <-- uncomment this line if registering events !!!
-		//register Forge Server Events here
+
+		MinecraftForge.EVENT_BUS.register(this);
+
+		//OR register Forge Server Events here
 	}
-	/* //OR like this
+
 	@SubscribeEvent
-	public void serverTickEvent(TickEvent.ServerTickEvent event) //<-- event type
-	{
-		//event code goes here
-	}*/
+	public void registerCommands(RegisterCommandsEvent event){
+		#if MC_VER > MC_1_18_2
+		ForgeMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+				(event.getCommandSelection() == Commands.CommandSelection.ALL) || (event.getCommandSelection() == Commands.CommandSelection.DEDICATED));
+		#else
+		ForgeMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+				(event.getEnvironment() == Commands.CommandSelection.ALL) || (event.getEnvironment() == Commands.CommandSelection.DEDICATED));
+		#endif
+	}
 }

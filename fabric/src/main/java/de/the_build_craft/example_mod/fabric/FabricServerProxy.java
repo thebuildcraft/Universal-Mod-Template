@@ -21,9 +21,17 @@
 
 package de.the_build_craft.example_mod.fabric;
 
+import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+#if MC_VER > MC_1_18_2
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+#else
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+#endif
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.commands.Commands;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -32,33 +40,44 @@ import org.apache.logging.log4j.Logger;
  * @author Ran
  * @author Tomlee
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 22.05.2024
  */
 public class FabricServerProxy implements AbstractModInitializer.IEventProxy
 {
 	private static final Logger LOGGER = AbstractModInitializer.LOGGER;
-	
+
 	private final boolean isDedicated;
-	
+
+	public void registerEvents()
+	{
+		LOGGER.info("Registering Fabric Server Events");
+
+		#if MC_VER > MC_1_18_2
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+				FabricMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) dispatcher,
+						(environment == Commands.CommandSelection.ALL) || (environment == Commands.CommandSelection.DEDICATED)));
+		#else
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+				FabricMain.registerServerCommands(((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) dispatcher),
+						dedicated));
+		#endif
+
+		//register Fabric Server Events here
+	}
+
 	public FabricServerProxy(boolean isDedicated)
 	{
 		this.isDedicated = isDedicated;
 	}
-	
+
 	private boolean isValidTime()//TODO is this needed???
 	{
 		if (isDedicated)
 		{
 			return true;
 		}
-		
+
 		//FIXME: This may cause init issue...
 		return !(Minecraft.getInstance().screen instanceof TitleScreen);
-	}
-	
-	/** Registers Fabric Events */
-	public void registerEvents()
-	{
-		LOGGER.info("Registering Fabric Server Events");
 	}
 }
