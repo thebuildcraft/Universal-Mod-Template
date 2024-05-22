@@ -23,7 +23,6 @@ package de.the_build_craft.example_mod.fabric;
 
 import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 #if MC_VER > MC_1_18_2
@@ -31,6 +30,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 #else
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 #endif
+import net.minecraft.commands.CommandSourceStack;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -51,10 +51,10 @@ public class FabricClientProxy implements AbstractModInitializer.IEventProxy
 		LOGGER.info("Registering Fabric Client Events");
 
 		#if MC_VER > MC_1_18_2
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> FabricMain.registerClientCommands((CommandDispatcher<ClientCommandSourceStack>) (CommandDispatcher<?>) dispatcher));
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> FabricMain.registerClientCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) dispatcher));
 		#else
 		//TODO test for MC <= 1.18.2
-		FabricMain.registerClientCommands((CommandDispatcher<ClientCommandSourceStack>) (CommandDispatcher<?>) ClientCommandManager.DISPATCHER);
+		FabricMain.registerClientCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) ClientCommandManager.DISPATCHER);
 		#endif
 
 		//register Fabric Client Events here

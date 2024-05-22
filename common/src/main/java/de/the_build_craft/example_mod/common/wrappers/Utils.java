@@ -20,8 +20,14 @@
 
 package de.the_build_craft.example_mod.common.wrappers;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.network.chat.Style;
+
+import java.util.function.Supplier;
 
 /**
  * @author Leander Knüttel
@@ -31,7 +37,42 @@ public class Utils {
     public static void sendToClientChat(Component text){
         Minecraft.getInstance().gui.getChat().addMessage(text);
     }
+
     public static void sendToClientChat(String text){
-        Minecraft.getInstance().gui.getChat().addMessage(Text.literal(text));
+        sendToClientChat(Text.literal(text));
+    }
+
+    public static void sendErrorToClientChat(Component text){
+        Minecraft.getInstance().gui.getChat().addMessage(text.copy().withStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+    }
+
+    public static void sendErrorToClientChat(String text){
+        sendErrorToClientChat(Text.literal(text));
+    }
+
+    public static void SendFeedback(CommandContext<CommandSourceStack> context, Component text, boolean allowLogging){
+        #if MC_VER < MC_1_20_1
+		context.getSource().sendSuccess(text, allowLogging);
+		#else
+        Supplier<Component> supplier = () -> text;
+        context.getSource().sendSuccess(supplier, allowLogging);
+		#endif
+    }
+
+    public static void SendFeedback(CommandContext<CommandSourceStack> context, String text, boolean allowLogging){
+        SendFeedback(context, Text.literal(text), allowLogging);
+    }
+
+    public static void SendError(CommandContext<CommandSourceStack> context, Component text, boolean allowLogging){
+        #if MC_VER < MC_1_20_1
+		context.getSource().sendSuccess(text.copy().withStyle(Style.EMPTY.withColor(ChatFormatting.RED)), allowLogging);
+		#else
+        Supplier<Component> supplier = () -> text.copy().withStyle(Style.EMPTY.withColor(ChatFormatting.RED));
+        context.getSource().sendSuccess(supplier, allowLogging);
+		#endif
+    }
+
+    public static void SendError(CommandContext<CommandSourceStack> context, String text, boolean allowLogging){
+        SendError(context, Text.literal(text), allowLogging);
     }
 }

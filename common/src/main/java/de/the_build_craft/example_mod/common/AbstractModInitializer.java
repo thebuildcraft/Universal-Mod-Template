@@ -27,8 +27,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
-import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import de.the_build_craft.example_mod.common.wrappers.Utils;
+import net.minecraft.commands.CommandSourceStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -147,16 +147,16 @@ public abstract class AbstractModInitializer
 		LOGGER.info("Mod Post-Initialized");
 	}*/
 
-	public static void registerClientCommands(CommandDispatcher<ClientCommandSourceStack> dispatcher){
+	public static void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher){
 		//TODO test example client command
 		//Example Command
-		LiteralArgumentBuilder<ClientCommandSourceStack> setAfkTimeCommand = literalClient("client_example_command")
-				.then(argumentClient("example_player", StringArgumentType.word())
-						.then(argumentClient("example_time", IntegerArgumentType.integer(0))
+		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("client_example_command")
+				.then(argument("example_string", StringArgumentType.word())
+						.then(argument("example_int", IntegerArgumentType.integer(0))
 								.executes(context -> {
 									String example_string = StringArgumentType.getString(context, "example_string");
 									int example_int = IntegerArgumentType.getInteger(context, "example_int");
-									context.getSource().SendFeedback("Example Feedback:  example_string: " + example_string + " example_int: " + example_int);
+									Utils.sendToClientChat("Example Feedback:  example_string: " + example_string + " example_int: " + example_int);
 									return 1;
 								})));
 		//remember to register it...
@@ -165,16 +165,16 @@ public abstract class AbstractModInitializer
 		//register client commands here
 	}
 
-	public static void registerServerCommands(CommandDispatcher<ServerCommandSourceStack> dispatcher, boolean allOrDedicated) {
+	public static void registerServerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean allOrDedicated) {
 		//TODO test example command
 		//Example Command
-		LiteralArgumentBuilder<ServerCommandSourceStack> setAfkTimeCommand = literal("server_example_command")
-				.then(argument("example_player", StringArgumentType.word())
-						.then(argument("example_time", IntegerArgumentType.integer(0))
+		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("server_example_command")
+				.then(argument("example_string", StringArgumentType.word())
+						.then(argument("example_int", IntegerArgumentType.integer(0))
 								.executes(context -> {
 									String example_string = StringArgumentType.getString(context, "example_string");
-									int example_int = IntegerArgumentType.getInteger(context, "example_time");
-									context.getSource().SendFeedback("Example Feedback:  example_string: " + example_string + " example_int: " + example_int, true);
+									int example_int = IntegerArgumentType.getInteger(context, "example_int");
+									Utils.SendFeedback(context, "Example Feedback:  example_string: " + example_string + " example_int: " + example_int, true);
 									return 1;
 								})));
 		//remember to register it...
@@ -183,16 +183,10 @@ public abstract class AbstractModInitializer
 		//register server commands here
 	}
 
-	private static LiteralArgumentBuilder<ServerCommandSourceStack> literal(String string) {
+	private static LiteralArgumentBuilder<CommandSourceStack> literal(String string) {
 		return LiteralArgumentBuilder.literal(string);
 	}
-	private static <T> RequiredArgumentBuilder<ServerCommandSourceStack, T> argument(String name, ArgumentType<T> type) {
-		return RequiredArgumentBuilder.argument(name, type);
-	}
-	private static LiteralArgumentBuilder<ClientCommandSourceStack> literalClient(String string) {
-		return LiteralArgumentBuilder.literal(string);
-	}
-	private static <T> RequiredArgumentBuilder<ClientCommandSourceStack, T> argumentClient(String name, ArgumentType<T> type) {
+	private static <T> RequiredArgumentBuilder<CommandSourceStack, T> argument(String name, ArgumentType<T> type) {
 		return RequiredArgumentBuilder.argument(name, type);
 	}
 	

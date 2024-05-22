@@ -23,7 +23,7 @@ package de.the_build_craft.example_mod.fabric;
 
 import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 #if MC_VER > MC_1_18_2
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 #else
@@ -54,11 +54,11 @@ public class FabricServerProxy implements AbstractModInitializer.IEventProxy
 
 		#if MC_VER > MC_1_18_2
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-				FabricMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) dispatcher,
+				FabricMain.registerServerCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) dispatcher,
 						(environment == Commands.CommandSelection.ALL) || (environment == Commands.CommandSelection.DEDICATED)));
 		#else
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-				FabricMain.registerServerCommands(((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) dispatcher),
+				FabricMain.registerServerCommands(((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) dispatcher),
 						dedicated));
 		#endif
 

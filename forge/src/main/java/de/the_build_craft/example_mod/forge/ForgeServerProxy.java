@@ -23,7 +23,7 @@ package de.the_build_craft.example_mod.forge;
 
 import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -61,10 +61,10 @@ public class ForgeServerProxy implements AbstractModInitializer.IEventProxy
 	@SubscribeEvent
 	public void registerCommands(RegisterCommandsEvent event){
 		#if MC_VER > MC_1_18_2
-		ForgeMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+		ForgeMain.registerServerCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
 				(event.getCommandSelection() == Commands.CommandSelection.ALL) || (event.getCommandSelection() == Commands.CommandSelection.DEDICATED));
 		#else
-		ForgeMain.registerServerCommands((CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+		ForgeMain.registerServerCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
 				(event.getEnvironment() == Commands.CommandSelection.ALL) || (event.getEnvironment() == Commands.CommandSelection.DEDICATED));
 		#endif
 	}

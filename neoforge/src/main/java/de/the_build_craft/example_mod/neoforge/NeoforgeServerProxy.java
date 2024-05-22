@@ -23,7 +23,7 @@ package de.the_build_craft.example_mod.neoforge;
 
 import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.wrappers.ServerCommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -61,7 +61,7 @@ public class NeoforgeServerProxy implements AbstractModInitializer.IEventProxy
 	@SubscribeEvent
 	public void registerCommands(RegisterCommandsEvent event){
 		NeoforgeMain.registerServerCommands(
-				(CommandDispatcher<ServerCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
+				(CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher(),
 				(event.getCommandSelection() == Commands.CommandSelection.ALL)
 						|| (event.getCommandSelection() == Commands.CommandSelection.DEDICATED));
 	}

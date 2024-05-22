@@ -23,7 +23,7 @@ package de.the_build_craft.example_mod.forge;
 
 import com.mojang.brigadier.CommandDispatcher;
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.wrappers.ClientCommandSourceStack;
+import net.minecraft.commands.CommandSourceStack;
 #if MC_VER > MC_1_17_1
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 #endif
@@ -59,7 +59,7 @@ public class ForgeClientProxy implements AbstractModInitializer.IEventProxy
 	#if MC_VER > MC_1_17_1
 	@SubscribeEvent
 	public static void registerClientCommands(RegisterClientCommandsEvent event) {
-		ForgeMain.registerClientCommands((CommandDispatcher<ClientCommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher());
+		ForgeMain.registerClientCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher());
 	}
 	#endif
 }
