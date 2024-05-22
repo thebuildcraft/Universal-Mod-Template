@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 20.05.2024
+ * date: 22.05.2024
  */
 
 plugins {
@@ -555,12 +555,6 @@ allprojects { p ->
         options.release = rootProject.java_version as Integer
         options.compilerArgs += ["-Xplugin:Manifold"]
         options.encoding = "UTF-8"
-    }
-
-    // Sets the project's actual Java version (it's recommended to use this over the `options.release` method above)
-    java {
-        sourceCompatibility = rootProject.java_version
-        targetCompatibility = rootProject.java_version
     }
 
     java {
