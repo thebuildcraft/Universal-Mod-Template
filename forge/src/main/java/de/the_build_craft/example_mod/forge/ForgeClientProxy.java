@@ -36,7 +36,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 22.05.2024
+ * @version 23.05.2024
  */
 public class ForgeClientProxy implements AbstractModInitializer.IEventProxy
 {
@@ -58,7 +58,7 @@ public class ForgeClientProxy implements AbstractModInitializer.IEventProxy
 
 	#if MC_VER > MC_1_17_1
 	@SubscribeEvent
-	public static void registerClientCommands(RegisterClientCommandsEvent event) {
+	public void registerClientCommands(RegisterClientCommandsEvent event) {
 		ForgeMain.registerClientCommands((CommandDispatcher<CommandSourceStack>) (CommandDispatcher<?>) event.getDispatcher());
 	}
 	#endif
