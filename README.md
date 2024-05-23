@@ -1,5 +1,5 @@
 # Todo List:
-1. [ ] test client and server commands
+1. [x] test client and server commands
 2. [ ] common mixins: in build.gradle: don't rename common to loaderCommon (does it work with Forgix then??)
 3. [ ] support: Bukkit, Paper, Sponge, Folia, Purpur, Spigot (is there mixin support in all of them?)
 4. [ ] rename everything:
