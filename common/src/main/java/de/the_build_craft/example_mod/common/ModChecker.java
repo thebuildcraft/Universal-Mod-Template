@@ -19,37 +19,38 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.neoforge.wrappers;
-
-import de.the_build_craft.example_mod.common.IModChecker;
-import net.neoforged.fml.ModList;
+package de.the_build_craft.example_mod.common;
 
 import java.io.File;
 
 /**
- * can check if a mod is installed
+ * Checks if a mod is loaded
  *
- * @author James Seibel
+ * @author coolGi
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 23.05.2024
  */
-public class ModChecker implements IModChecker
+public abstract class ModChecker
 {
 	public static ModChecker INSTANCE;
-	public ModChecker(){
+
+	public ModChecker() {
 		INSTANCE = this;
 	}
-	
-	@Override
-	public boolean isModLoaded(String modid) 
-	{
-		return ModList.get().isLoaded(modid); 
+
+	/**
+	 * Checks if a mod is loaded
+	 */
+	public abstract boolean isModLoaded(String modid);
+
+	public abstract File modLocation(String modid);
+
+	public boolean classExists(String className) {
+		try {
+			var ClassTest = Class.forName(className);
+			return true;
+		} catch (ClassNotFoundException ignored) {
+			return false;
+		}
 	}
-	
-	@Override
-	public File modLocation(String modid) 
-	{
-		return ModList.get().getModFileById(modid).getFile().getFilePath().toFile(); 
-	}
-	
 }

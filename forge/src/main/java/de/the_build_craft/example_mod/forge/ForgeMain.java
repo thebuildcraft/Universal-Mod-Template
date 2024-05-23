@@ -22,7 +22,7 @@
 package de.the_build_craft.example_mod.forge;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.forge.wrappers.ModChecker;
+import de.the_build_craft.example_mod.forge.wrappers.ForgeModChecker;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
@@ -55,7 +55,7 @@ import java.util.Random;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 22.05.2024
+ * @version 23.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class ForgeMain extends AbstractModInitializer
@@ -84,7 +84,7 @@ public class ForgeMain extends AbstractModInitializer
 	
 	@Override
 	protected void createInitialBindings() {
-		new ModChecker();
+		new ForgeModChecker();
 
 		//Forge static Instances here
 	}

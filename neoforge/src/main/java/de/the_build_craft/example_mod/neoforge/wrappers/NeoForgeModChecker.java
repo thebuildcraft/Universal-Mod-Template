@@ -19,10 +19,10 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.fabric.wrappers;
+package de.the_build_craft.example_mod.neoforge.wrappers;
 
-import de.the_build_craft.example_mod.common.IModChecker;
-import net.fabricmc.loader.api.FabricLoader;
+import de.the_build_craft.example_mod.common.ModChecker;
+import net.neoforged.fml.ModList;
 
 import java.io.File;
 
@@ -31,25 +31,20 @@ import java.io.File;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 23.05.2024
  */
-public class ModChecker implements IModChecker
+public class NeoForgeModChecker extends ModChecker
 {
-	public static ModChecker INSTANCE;
-	public ModChecker(){
-		INSTANCE = this;
-	}
-	
+	/**
+	 * Checks if a mod is loaded
+	 */
 	@Override
-	public boolean isModLoaded(String modid)
-	{
-		return FabricLoader.getInstance().isModLoaded(modid);
+	public boolean isModLoaded(String modid) {
+		return ModList.get().isLoaded(modid);
 	}
-	
+
 	@Override
-	public File modLocation(String modid)
-	{
-		return new File(FabricLoader.getInstance().getModContainer(modid).get().getOrigin().getPaths().get(0).toUri());
+	public File modLocation(String modid) {
+		return ModList.get().getModFileById(modid).getFile().getFilePath().toFile();
 	}
-	
 }

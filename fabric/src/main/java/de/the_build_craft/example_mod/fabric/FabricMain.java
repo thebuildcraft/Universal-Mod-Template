@@ -31,7 +31,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 22.05.2024
+ * @version 23.05.2024
  */
 public class FabricMain extends AbstractModInitializer implements ClientModInitializer, DedicatedServerModInitializer
 {
@@ -54,7 +54,7 @@ public class FabricMain extends AbstractModInitializer implements ClientModIniti
 
 	@Override
 	protected void createInitialBindings() {
-		new ModChecker();
+		new FabricModChecker();
 
 		//Fabric static Instances here
 	}

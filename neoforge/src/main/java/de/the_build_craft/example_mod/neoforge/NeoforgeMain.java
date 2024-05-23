@@ -22,7 +22,7 @@
 package de.the_build_craft.example_mod.neoforge;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.neoforge.wrappers.ModChecker;
+import de.the_build_craft.example_mod.neoforge.wrappers.NeoForgeModChecker;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -38,7 +38,7 @@ import net.neoforged.neoforge.client.ConfigScreenHandler;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 22.05.2024
+ * @version 23.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class NeoforgeMain extends AbstractModInitializer
@@ -67,7 +67,7 @@ public class NeoforgeMain extends AbstractModInitializer
 	
 	@Override
 	protected void createInitialBindings() {
-		new ModChecker();
+		new NeoForgeModChecker();
 
 		//NeoForge static Instances here
 	}

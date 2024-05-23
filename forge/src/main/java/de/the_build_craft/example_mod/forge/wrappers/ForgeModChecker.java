@@ -19,21 +19,32 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.common;
+package de.the_build_craft.example_mod.forge.wrappers;
+
+import de.the_build_craft.example_mod.common.ModChecker;
+import net.minecraftforge.fml.ModList;
 
 import java.io.File;
 
 /**
- * Checks if a mod is loaded
+ * can check if a mod is installed
  *
- * @author coolGi
+ * @author James Seibel
  * @author Leander Knüttel
- * @version 17.05.2024
+ * @version 23.05.2024
  */
-public interface IModChecker
+public class ForgeModChecker extends ModChecker
 {
-	/** Checks if a mod is loaded */
-	boolean isModLoaded(String modid);
-	
-	File modLocation(String modid);
+	/**
+	 * Checks if a mod is loaded
+	 */
+	@Override
+	public boolean isModLoaded(String modid) {
+		return ModList.get().isLoaded(modid);
+	}
+
+	@Override
+	public File modLocation(String modid) {
+		return ModList.get().getModFileById(modid).getFile().getFilePath().toFile();
+	}
 }
