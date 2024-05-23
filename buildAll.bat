@@ -1,7 +1,6 @@
 @echo off & setlocal enabledelayedexpansion
 
 echo ==================== Note: All build jars will be in the folder called 'buildAllJars' ====================
-echo ======================= !!! Warning: Forgix NeoForge Merge is currently broken !!! =======================
 del /F /Q buildAllJars\original\*
 del /F /Q buildAllJars\*
 mkdir buildAllJars
