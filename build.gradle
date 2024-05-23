@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 22.05.2024
+ * date: 23.05.2024
  */
 
 plugins {
@@ -136,7 +136,7 @@ forgix {
         else { // hack to not let it merge automatically
             forge {
                 jarLocation = "invalid_build/libs/example_mod-forge-${rootProject.versionStr}.jar"
-                mixin "invalid_example_mod.forge.mixins.json"
+                //mixin "invalid_example_mod.forge.mixins.json"
             }
         }
     }
@@ -151,7 +151,7 @@ forgix {
         else { // hack to not let it merge automatically
             neoforge {
                 jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-                mixin "invalid_example_mod.neoforge.mixins.json"
+                //mixin "invalid_example_mod.neoforge.mixins.json"
             }
         }
     }
