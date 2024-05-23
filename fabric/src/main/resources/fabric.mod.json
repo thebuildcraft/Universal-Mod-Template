@@ -32,7 +32,8 @@
     },
     
     "mixins": [
-        "example_mod.fabric.mixins.json"
+        "example_mod.fabric.mixins.json",
+        "example_mod.common.mixins.json"
     ],
     
     "depends": {

@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 20.05.2024
+ * date: 23.05.2024
  */
 
 plugins {
@@ -44,7 +44,8 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfigs = [
-                "example_mod.forge.mixins.json"
+                "example_mod.forge.mixins.json",
+                "example_mod.common.mixins.json"
         ]
     }
 

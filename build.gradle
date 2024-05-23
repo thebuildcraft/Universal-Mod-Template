@@ -131,12 +131,12 @@ forgix {
             forge {
                 jarLocation = "build/libs/example_mod-forge-${rootProject.versionStr}.jar"
                 mixin "example_mod.forge.mixins.json"
+                mixin "example_mod.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically
             forge {
                 jarLocation = "invalid_build/libs/example_mod-forge-${rootProject.versionStr}.jar"
-                //mixin "invalid_example_mod.forge.mixins.json"
             }
         }
     }
@@ -146,12 +146,12 @@ forgix {
             neoforge {
                 jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
                 mixin "example_mod.neoforge.mixins.json"
+                mixin "example_mod.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically
             neoforge {
                 jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-                //mixin "invalid_example_mod.neoforge.mixins.json"
             }
         }
     }
@@ -316,11 +316,11 @@ subprojects { p ->
         configurations = [project.configurations.shadowMe]
         if (isMinecraftSubProject && p != project(":common")) {
             configurations.push(project.configurations.shadowCommon) // Shadow the common subproject
-            relocate "de.the_build_craft.example_mod.common", "loaderCommon.${p.name}.de.the_build_craft.example_mod.common" // Move the loader files to a different location
+            //FIXME relocate "de.the_build_craft.example_mod.common", "loaderCommon.${p.name}.de.the_build_craft.example_mod.common" // Move the loader files to a different location
         
             if (findProject(":fabricLike") && p != project(":fabricLike")) {
                 configurations.push(project.configurations.shadowFabricLike) // Shadow the fabricLike subproject
-                relocate "de.the_build_craft.example_mod.fabriclike", "loaderCommon.${p.name}.de.the_build_craft.example_mod.fabriclike" // Move the loader files to a different location
+                //FIXME relocate "de.the_build_craft.example_mod.fabriclike", "loaderCommon.${p.name}.de.the_build_craft.example_mod.fabriclike" // Move the loader files to a different location
             }
         }
         def librariesLocation = "example_mod.libraries"
