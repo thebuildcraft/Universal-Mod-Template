@@ -2,6 +2,7 @@
 
 This is a multi-loader and multi-version minecraft mod template that supports client and server mods/plugins.
 Most of the build scripts are originally from the Distant Horizons mod by James Seibel.
+This template should take away the need to write setup boilerplate code.
 
 
 > [!IMPORTANT]  
