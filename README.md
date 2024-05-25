@@ -24,7 +24,7 @@ Maybe I overscoped a bit... but I will see how it goes :)
 6. [x] mixin examples
 7. [x] Text wrappers to make debugging commands easier to write
 8. [x] multi-loader and multi-version client and server commands
-9. [ ] common mixins: in build.gradle: don't rename common to loaderCommon (does it work with Forgix then??)
+9. [x] common mixins: in build.gradle: don't rename common to loaderCommon (does it work with Forgix then??)
 10. [ ] support: Bukkit, Paper, Sponge, Folia, Purpur, Spigot (is there mixin support in all of them?)
 11. [ ] rename everything:
     1. [ ] put function in name: "example_mod_id", "Example Mod Name", ...
