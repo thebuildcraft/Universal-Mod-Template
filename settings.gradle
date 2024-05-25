@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 20.05.2024
+ * date: 26.05.2024
  */
 
 pluginManagement {
@@ -55,6 +55,10 @@ pluginManagement {
         maven {
             name "ParchmentMC"
             url "https://maven.parchmentmc.org"
+        }
+        maven {
+            name "Spigot"
+            url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
         }
         mavenCentral()
         gradlePluginPortal()
