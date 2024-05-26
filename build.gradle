@@ -343,6 +343,7 @@ subprojects { p ->
                                 "quilt.mod.json",
                                 "META-INF/mods.toml",
                                 "META-INF/neoforge.mods.toml",//for MC >= 1.20.5
+                                "plugin.yml",
 
                                 // The mixins for each of the loaders
                                 "example_mod."+ p.name +".fabricLike.mixins.json"
@@ -391,6 +392,8 @@ subprojects { p ->
 
                 fabric_incompatibility_list  : fabric_incompatibility_list,
                 fabric_recommend_list        : fabric_recommend_list,
+
+                spigot_api_version           : spigot_api_version,
         ]
         
         // replace any properties in the sub-projects with the values defined here

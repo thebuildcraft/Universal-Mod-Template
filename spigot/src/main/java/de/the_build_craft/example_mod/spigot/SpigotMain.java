@@ -18,37 +18,30 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.bukkit;
+package de.the_build_craft.example_mod.spigot;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.LoaderType;
 
 /**
  * @author Leander Knüttel
  * @version 26.05.2024
  */
-public class BukkitMain extends AbstractModInitializer {
-    public static BukkitMain INSTANCE;
+public class SpigotMain extends AbstractModInitializer {
+    public static SpigotMain INSTANCE;
 
     @Override
     public void onInitializeServer() {
-        loaderType = LoaderType.Bukkit;
+        loaderType = LoaderType.Spigot;
         super.onInitializeServer();
         INSTANCE = this;
 
-        //Bukkit Server init here
+        //Spigot Server init here
     }
 
     @Override
     protected void createInitialBindings() {
 
-    }
-
-    /**
-     * ignore this!
-     */
-    @Override
-    protected IEventProxy createClientProxy() {
-        return null;
     }
 
     @Override
@@ -59,5 +52,13 @@ public class BukkitMain extends AbstractModInitializer {
     @Override
     protected void initializeModCompat() {
 
+    }
+
+    /**
+     * ignore this!
+     */
+    @Override
+    protected IEventProxy createClientProxy() {
+        return null;
     }
 }

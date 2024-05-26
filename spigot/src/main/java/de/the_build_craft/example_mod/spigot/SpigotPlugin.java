@@ -18,23 +18,28 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.bukkit;
+package de.the_build_craft.example_mod.spigot;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Leander Knüttel
  * @version 26.05.2024
  */
-public class BukkitPlugin  extends JavaPlugin {
+public class SpigotPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        BukkitMain bukkitMain = new BukkitMain();
+        SpigotMain bukkitMain = new SpigotMain();
         bukkitMain.onInitializeServer();
+        Bukkit.getLogger().info(ChatColor.GREEN + "Enabled " + "Example Mod");
     }
 
     @Override
     public void onDisable() {
         //TODO
+
+        Bukkit.getLogger().info(ChatColor.RED + "Disabled " + "Example Mod");
     }
 }
