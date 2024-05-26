@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 23.05.2024
+ * date: 26.05.2024
  */
 
 plugins {
@@ -371,8 +371,9 @@ subprojects { p ->
 
         // The left side is what gets replaced in the mod info and the right side is where to get it from in the gradle.properties
         def replaceProperties = [
+                mod_id                       : mod_id,
                 version                      : mod_version,
-                mod_name                     : mod_readable_name,
+                mod_name                     : mod_name,
                 group                        : maven_group,
                 authors                      : mod_authors,
                 description                  : mod_description,
@@ -380,6 +381,7 @@ subprojects { p ->
                 source                       : mod_source,
                 issues                       : mod_issues,
                 discord                      : mod_discord,
+                mod_license                  : mod_license,
 
                 minecraft_version            : minecraft_version,
                 compatible_minecraft_versions: compatible_minecraft_versions,
@@ -388,7 +390,7 @@ subprojects { p ->
                 quilt_contributors           : "{"+quilt_contributors.join(", ")+"}",
 
                 fabric_incompatibility_list  : fabric_incompatibility_list,
-                fabric_recommend_list  : fabric_recommend_list,
+                fabric_recommend_list        : fabric_recommend_list,
         ]
         
         // replace any properties in the sub-projects with the values defined here

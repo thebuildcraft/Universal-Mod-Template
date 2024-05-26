@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "example_mod",
+    "id": "${mod_id}",
     "version": "${version}",
     
     "name": "${mod_name}",
@@ -13,8 +13,8 @@
         "issues": "${issues}"
     },
     
-    "license": "GPL-3",
-    "icon": "assets/example_mod/icon.png",
+    "license": "${mod_license}",
+    "icon": "assets/${mod_id}/icon.png",
     
     "accessWidener": "example_mod.accesswidener",
     
@@ -32,8 +32,8 @@
     },
     
     "mixins": [
-        "example_mod.fabric.mixins.json",
-        "example_mod.common.mixins.json"
+        "${mod_id}.fabric.mixins.json",
+        "${mod_id}.common.mixins.json"
     ],
     
     "depends": {

@@ -1,19 +1,19 @@
 modLoader = "javafml" #//mandatory
-loaderVersion = "*" # // mandatory. Allow all forge versions as we are definding what Minecraft versions we requre later on
-license = "GPL"
+loaderVersion = "*" # // mandatory. Allow all forge versions as we are definding what Minecraft versions we require later on
+license = "${mod_license}"
 issueTrackerURL = "${issues}"
 
 
 [[mods]] #//mandatory
-    modId = "example_mod" #//mandatory
+    modId = "${mod_id}" #//mandatory
     version = "${version}" #//mandatory, gets the version number from jar populated by the build.gradle script
     displayName = "${mod_name}" #//mandatory
     authors = ["me", "someone else", "a third person"] # Should be done with `$authors`, but architectury complains
     #//updateJSONURL="https://change.me.example.invalid/updates.json" # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
     displayURL = "${homepage}"
     description = "${description}" #//mandatory. The description text for the mod
-    logoFile = "assets/example_mod/icon.png"
-    catalogueImageIcon = "assets/example_mod/icon.png"
+    logoFile = "assets/${mod_id}/icon.png"
+    catalogueImageIcon = "assets/${mod_id}/icon.png"
     credits = "Massive thanks to: ..."
     #// if not set defaults to "false"
     clientSideOnly = "false"
@@ -26,12 +26,12 @@ issueTrackerURL = "${issues}"
 # FIXME: Forgix does some renaming...
 # FIXME: Forgix error: ClassNotFoundException:neode.the_build_craft.example_mod.neoforge.mixins.NeoforgeMixinPlugin
 [[mixins]]
-config = "example_mod.neoforge.mixins.json"
+config = "${mod_id}.neoforge.mixins.json"
 
 [[mixins]]
-config = "example_mod.common.mixins.json"
+config = "${mod_id}.common.mixins.json"
 
-[[dependencies.example_mod]]
+[[dependencies.${mod_id}]]
     modId = "minecraft"
     mandatory = true  # Forge syntax
     type = "required" # Neoforge syntax
