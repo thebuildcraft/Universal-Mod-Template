@@ -393,7 +393,7 @@ subprojects { p ->
                 fabric_incompatibility_list  : fabric_incompatibility_list,
                 fabric_recommend_list        : fabric_recommend_list,
 
-                spigot_api_version           : spigot_api_version,
+                spigot_api_compatibility     : spigot_api_compatibility,
         ]
         
         // replace any properties in the sub-projects with the values defined here
