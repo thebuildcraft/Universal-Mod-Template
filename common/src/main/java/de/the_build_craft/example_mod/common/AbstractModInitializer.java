@@ -142,7 +142,6 @@ public abstract class AbstractModInitializer
 	}*/
 
 	public static void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher){
-		//TODO test example client command
 		//Example Command
 		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("client_example_command")
 				.then(argument("example_string", StringArgumentType.word())
@@ -160,7 +159,6 @@ public abstract class AbstractModInitializer
 	}
 
 	public static void registerServerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean allOrDedicated) {
-		//TODO test example command
 		//Example Command
 		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("server_example_command")
 				.then(argument("example_string", StringArgumentType.word())
