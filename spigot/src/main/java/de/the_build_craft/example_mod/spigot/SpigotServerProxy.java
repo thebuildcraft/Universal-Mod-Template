@@ -21,44 +21,14 @@
 package de.the_build_craft.example_mod.spigot;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
-import de.the_build_craft.example_mod.common.LoaderType;
 
 /**
  * @author Leander Knüttel
  * @version 26.05.2024
  */
-public class SpigotMain extends AbstractModInitializer {
-    public static SpigotMain INSTANCE;
-
+public class SpigotServerProxy implements AbstractModInitializer.IEventProxy {
     @Override
-    public void onInitializeServer() {
-        loaderType = LoaderType.Spigot;
-        super.onInitializeServer();
-        INSTANCE = this;
+    public void registerEvents() {
 
-        //Spigot Server init here
-    }
-
-    @Override
-    protected void createInitialBindings() {
-
-    }
-
-    @Override
-    protected IEventProxy createServerProxy(boolean isDedicated) {
-        return new SpigotServerProxy();
-    }
-
-    @Override
-    protected void initializeModCompat() {
-
-    }
-
-    /**
-     * ignore this!
-     */
-    @Override
-    protected IEventProxy createClientProxy() {
-        return null;
     }
 }
