@@ -23,6 +23,7 @@ package de.the_build_craft.example_mod.common.mixins.client;
 #if MC_VER > MC_1_19_2
 import net.minecraft.client.gui.components.LogoRenderer;
 #endif
+import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -33,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * @author Leander Knüttel
- * @version 25.05.2024
+ * @version 27.05.2024
  */
 #if MC_VER > MC_1_19_2
 @Mixin(LogoRenderer.class)

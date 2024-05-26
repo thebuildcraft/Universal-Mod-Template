@@ -28,7 +28,7 @@ import java.io.File;
  *
  * @author coolGi
  * @author Leander Knüttel
- * @version 23.05.2024
+ * @version 27.05.2024
  */
 public abstract class ModChecker
 {
@@ -47,7 +47,7 @@ public abstract class ModChecker
 
 	public boolean classExists(String className) {
 		try {
-			var ClassTest = Class.forName(className);
+			Class<?> ClassTest = Class.forName(className);
 			return true;
 		} catch (ClassNotFoundException ignored) {
 			return false;

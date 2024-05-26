@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 26.05.2024
+ * date: 27.05.2024
  */
 
 plugins {
@@ -40,7 +40,7 @@ dependencies {
 publishing {
     publications {
         mavenCommon(MavenPublication) {
-            artifactId = rootProject.mod_name
+            artifactId = rootProject.mod_id
             from components.java
         }
     }

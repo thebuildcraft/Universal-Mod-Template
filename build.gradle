@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 26.05.2024
+ * date: 27.05.2024
  */
 
 plugins {
@@ -123,20 +123,20 @@ else{
 }
 
 forgix {
-    group = "de.the_build_craft.example_mod"
-    mergedJarName = "ExampleMod-${rootProject.versionStr}.jar"
+    group = rootProject.maven_group
+    mergedJarName = "${rootProject.mod_id}-${rootProject.versionStr}.jar"
 
     if (findProject(":forge")) {
         if (mergeForge) {
             forge {
-                jarLocation = "build/libs/example_mod-forge-${rootProject.versionStr}.jar"
-                mixin "example_mod.forge.mixins.json"
-                mixin "example_mod.common.mixins.json"
+                jarLocation = "build/libs/${rootProject.mod_id}-forge-${rootProject.versionStr}.jar"
+                mixin "${rootProject.mod_id}.forge.mixins.json"
+                mixin "${rootProject.mod_id}.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically
             forge {
-                jarLocation = "invalid_build/libs/example_mod-forge-${rootProject.versionStr}.jar"
+                jarLocation = "invalid_build/libs/${rootProject.mod_id}-forge-${rootProject.versionStr}.jar"
             }
         }
     }
@@ -144,14 +144,14 @@ forgix {
     if (findProject(":neoforge")) {
         if (mergeNeoForge){
             neoforge {
-                jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-                mixin "example_mod.neoforge.mixins.json"
-                mixin "example_mod.common.mixins.json"
+                jarLocation = "build/libs/${rootProject.mod_id}-neoforge-${rootProject.versionStr}.jar"
+                mixin "${rootProject.mod_id}.neoforge.mixins.json"
+                mixin "${rootProject.mod_id}.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically
             neoforge {
-                jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
+                jarLocation = "invalid_build/libs/${rootProject.mod_id}-neoforge-${rootProject.versionStr}.jar"
             }
         }
     }
@@ -160,15 +160,15 @@ forgix {
     //    if (mergeNeoForge){
     //        custom {
     //            projectName = "neoforge"
-    //            jarLocation = "build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-    //            //mixin "example_mod.neoforge.mixins.json"
+    //            jarLocation = "build/libs/${rootProject.mod_id}-neoforge-${rootProject.versionStr}.jar"
+    //            //mixin "${rootProject.mod_id}.neoforge.mixins.json"
     //        }
     //    }
     //    else { // hack to not let it merge automatically
     //        custom {
     //            projectName = "neoforge"
-    //            jarLocation = "invalid_build/libs/example_mod-neoforge-${rootProject.versionStr}.jar"
-    //            //mixin "invalid_example_mod.neoforge.mixins.json"
+    //            jarLocation = "invalid_build/libs/${rootProject.mod_id}-neoforge-${rootProject.versionStr}.jar"
+    //            //mixin "invalid_${rootProject.mod_id}.neoforge.mixins.json"
     //        }
     //    }
     //}
@@ -176,12 +176,12 @@ forgix {
     if (findProject(":fabric")){
         if (mergeFabric){
             fabric {
-                jarLocation = "build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+                jarLocation = "build/libs/${rootProject.mod_id}-fabric-${rootProject.versionStr}.jar"
             }
         }
         else { // hack to not let it merge automatically
             fabric {
-                jarLocation = "invalid_build/libs/example_mod-fabric-${rootProject.versionStr}.jar"
+                jarLocation = "invalid_build/libs/${rootProject.mod_id}-fabric-${rootProject.versionStr}.jar"
             }
         }
     }
@@ -189,17 +189,17 @@ forgix {
     if (findProject(":quilt")){
         if (mergeQuilt){
             quilt {
-                jarLocation = "build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+                jarLocation = "build/libs/${rootProject.mod_id}-quilt-${rootProject.versionStr}.jar"
             }
         }
         else{ // hack to not let it merge automatically
             quilt {
-                jarLocation = "invalid_build/libs/example_mod-quilt-${rootProject.versionStr}.jar"
+                jarLocation = "invalid_build/libs/${rootProject.mod_id}-quilt-${rootProject.versionStr}.jar"
             }
         }
     }
 
-    removeDuplicate "de.the_build_craft.example_mod"
+    removeDuplicate "${rootProject.maven_group}"
 }
 
 subprojects { p ->
@@ -323,7 +323,7 @@ subprojects { p ->
                 //FIXME relocate "de.the_build_craft.example_mod.fabriclike", "loaderCommon.${p.name}.de.the_build_craft.example_mod.fabriclike" // Move the loader files to a different location
             }
         }
-        def librariesLocation = "example_mod.libraries"
+        def librariesLocation = rootProject.mod_id + ".libraries"
 
         // Example Library to relocate
         //relocate "org.lwjgl.system.jawt", "${librariesLocation}.lwjgl.system.jawt"
@@ -346,7 +346,7 @@ subprojects { p ->
                                 "plugin.yml",
 
                                 // The mixins for each of the loaders
-                                "example_mod."+ p.name +".fabricLike.mixins.json"
+                                rootProject.mod_id + "."+ p.name +".fabricLike.mixins.json"
         ]
         def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
 
@@ -418,7 +418,7 @@ subprojects { p ->
 
 
         // ==================== Delete un-needed files ====================
-        exclude "example_mod.fabricLike.mixins.json" // This isnt required atm, but we will be using it later
+        exclude rootProject.mod_id + ".fabricLike.mixins.json" // This isnt required atm, but we will be using it later
 
 //        exclude "*.example_mod.accesswidener"
 ////        include "${accessWidenerVersion}.example_mod.accesswidener"
@@ -426,7 +426,7 @@ subprojects { p ->
         // Jank solution to remove all unused accesswideners
         // The line above would work..., except that (neo)forge (well, mainly architectury) requires the original accesswidener file, meaning we require this jank solution to keep it
         exclude { file ->
-            if (file.name.contains(".example_mod.accesswidener") && file.name != "${accessWidenerVersion}.example_mod.accesswidener") {
+            if (file.name.contains(".${rootProject.mod_id}.accesswidener") && file.name != "${accessWidenerVersion}.${rootProject.mod_id}.accesswidener") {
                 return true
             }
             return false
@@ -443,13 +443,13 @@ allprojects { p ->
     apply plugin: "java"
     apply plugin: "maven-publish"
     
-    archivesBaseName = rootProject.mod_name
+    archivesBaseName = rootProject.mod_id
     version = project.name + "-" + rootProject.versionStr
     group = rootProject.maven_group
     
     // this is the text that appears at the top of the overview (home) page
     // and is used when bookmarking a page
-    javadoc.title = rootProject.mod_name + "-" + project.name
+    javadoc.title = rootProject.mod_id + "-" + project.name
 
     // Some annotations arent "technically" part of the official java standard,
     //  so we define it ourself here
@@ -538,16 +538,16 @@ allprojects { p ->
     }
 
     task copyCommonLoaderResources(type: Copy) {
-        from project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener")
+        from project(":common").file("src/main/resources/${accessWidenerVersion}.${rootProject.mod_id}.accesswidener")
         into(file(p.file("build/resources/main")))
-        rename "${accessWidenerVersion}.example_mod.accesswidener", "example_mod.accesswidener"
+        rename "${accessWidenerVersion}.${rootProject.mod_id}.accesswidener", "${rootProject.mod_id}.accesswidener"
 
 
         // Move the fabricLike mixin to its different places for each subproject
         if (findProject(":fabricLike")) {
-            from project(":fabricLike").file("src/main/resources/example_mod.fabricLike.mixins.json")
+            from project(":fabricLike").file("src/main/resources/${rootProject.mod_id}.fabricLike.mixins.json")
             into(file(p.file("build/resources/main")))
-            rename "example_mod.fabricLike.mixins.json", "example_mod." + p.name + ".fabricLike.mixins.json"
+            rename "${rootProject.mod_id}.fabricLike.mixins.json", "${rootProject.mod_id}." + p.name + ".fabricLike.mixins.json"
         }
     }
 
