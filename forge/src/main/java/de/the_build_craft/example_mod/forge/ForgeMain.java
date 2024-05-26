@@ -22,6 +22,7 @@
 package de.the_build_craft.example_mod.forge;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.LoaderType;
 import de.the_build_craft.example_mod.forge.wrappers.ForgeModChecker;
 
 import net.minecraftforge.fml.common.Mod;
@@ -55,7 +56,7 @@ import java.util.Random;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 23.05.2024
+ * @version 26.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class ForgeMain extends AbstractModInitializer

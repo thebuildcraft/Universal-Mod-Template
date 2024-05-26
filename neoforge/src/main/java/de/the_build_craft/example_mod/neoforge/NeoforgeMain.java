@@ -22,6 +22,7 @@
 package de.the_build_craft.example_mod.neoforge;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.LoaderType;
 import de.the_build_craft.example_mod.neoforge.wrappers.NeoForgeModChecker;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -38,7 +39,7 @@ import net.neoforged.neoforge.client.ConfigScreenHandler;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 23.05.2024
+ * @version 26.05.2024
  */
 @Mod(AbstractModInitializer.MOD_ID)
 public class NeoforgeMain extends AbstractModInitializer

@@ -22,6 +22,7 @@
 package de.the_build_craft.example_mod.fabric;
 
 import de.the_build_craft.example_mod.common.AbstractModInitializer;
+import de.the_build_craft.example_mod.common.LoaderType;
 import de.the_build_craft.example_mod.fabric.wrappers.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -31,7 +32,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 23.05.2024
+ * @version 26.05.2024
  */
 public class FabricMain extends AbstractModInitializer implements ClientModInitializer, DedicatedServerModInitializer
 {

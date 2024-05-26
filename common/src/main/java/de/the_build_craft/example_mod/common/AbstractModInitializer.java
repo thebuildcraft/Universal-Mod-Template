@@ -62,20 +62,6 @@ public abstract class AbstractModInitializer
 	//protected abstract void runDelayedSetup();
 
 	public LoaderType loaderType;
-	public enum LoaderType{
-		Fabric,
-		Quilt,
-		Forge,
-		NeoForge,
-		Bukkit,
-		Spigot,
-		Paper,
-		Folia,
-		Sponge,
-		Purpur;
-		LoaderType(){
-		}
-	}
 	
 	//===================//
 	// initialize events //
@@ -84,7 +70,7 @@ public abstract class AbstractModInitializer
 	public void onInitializeClient()
 	{
 		LOGGER.info("Initializing " + MOD_NAME);
-		
+
 		this.startup();//<-- common mod init in here
 		this.printModInfo();
 
