@@ -94,6 +94,7 @@ def mergeFabric = false
 def mergeQuilt = false
 def mergeForge = false
 def mergeNeoForge = false
+def mergeSpigot = false
 
 if (rootProject.hasProperty("forgix_merge")){
     for (loader in ((String) rootProject.forgix_merge).split(",")) {
@@ -111,6 +112,9 @@ if (rootProject.hasProperty("forgix_merge")){
                 break
             case "neoforge":
                 mergeNeoForge = true
+                break
+            case "spigot":
+                mergeSpigot = true
         }
     }
 }
@@ -120,6 +124,7 @@ else{
     mergeQuilt = true
     mergeForge = true
     mergeNeoForge = true
+    mergeSpigot = true
 }
 
 forgix {
@@ -195,6 +200,15 @@ forgix {
         else{ // hack to not let it merge automatically
             quilt {
                 jarLocation = "invalid_build/libs/${rootProject.mod_id}-quilt-${rootProject.versionStr}.jar"
+            }
+        }
+    }
+
+    if (findProject(":spigot")){
+        if (mergeSpigot){
+            custom {
+                projectName = "spigot"
+                jarLocation = "build/libs/${rootProject.mod_id}-spigot-${rootProject.versionStr}.jar"
             }
         }
     }
