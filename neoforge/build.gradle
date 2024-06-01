@@ -48,6 +48,9 @@ loom {
     silentMojangMappingsLicense() // Shut the licencing warning
     accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.${mod_id}.accesswidener")
 
+    mixin {
+        useLegacyMixinAp = false
+    }
     neoForge {
         //TODO can this all be removed ?????
 

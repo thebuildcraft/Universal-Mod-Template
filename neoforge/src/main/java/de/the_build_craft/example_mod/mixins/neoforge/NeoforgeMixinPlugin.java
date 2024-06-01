@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.neoforge.mixins;
+package de.the_build_craft.example_mod.mixins.neoforge;
 
 import net.neoforged.fml.ModList;
 import org.objectweb.asm.tree.ClassNode;

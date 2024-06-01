@@ -1,13 +1,14 @@
 {
     "required": true,
     "minVersion": "0.8",
-    "package": "de.the_build_craft.example_mod.neoforge.mixins",
+    "package": "de.the_build_craft.example_mod.mixins",
     "mixins": [
     ],
     "client": [
-        "client.SplashManagerMixin"
+        "neoforge.client.SplashManagerMixin",
+        "common.client.TitleScreenMixin"
     ],
     "server": [
     ],
-    "plugin": "de.the_build_craft.example_mod.neoforge.mixins.NeoforgeMixinPlugin"
+    "plugin": "de.the_build_craft.example_mod.mixins.neoforge.NeoforgeMixinPlugin"
 }

@@ -1,16 +1,17 @@
 {
     "required": true,
     "minVersion": "0.8",
-    "package": "de.the_build_craft.example_mod.fabric.mixins",
+    "package": "de.the_build_craft.example_mod.mixins",
     "mixins": [
     ],
     "client": [
-        "client.SplashManagerMixin"
+        "fabric.client.SplashManagerMixin",
+        "common.client.TitleScreenMixin"
     ],
     "server": [
     ],
     "injectors": {
         "defaultRequire": 1
     },
-    "plugin": "de.the_build_craft.example_mod.fabric.mixins.FabricMixinPlugin"
+    "plugin": "de.the_build_craft.example_mod.mixins.fabric.FabricMixinPlugin"
 }

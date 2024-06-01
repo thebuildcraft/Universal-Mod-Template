@@ -18,7 +18,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.fabric.mixins.client;
+package de.the_build_craft.example_mod.mixins.fabric.client;
 
 #if MC_VER > MC_1_19_4
 import net.minecraft.client.gui.components.SplashRenderer;

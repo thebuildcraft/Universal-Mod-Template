@@ -136,7 +136,6 @@ forgix {
             forge {
                 jarLocation = "build/libs/${rootProject.mod_id}-forge-${rootProject.versionStr}.jar"
                 mixin "${rootProject.mod_id}.forge.mixins.json"
-                mixin "${rootProject.mod_id}.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically
@@ -151,7 +150,6 @@ forgix {
             neoforge {
                 jarLocation = "build/libs/${rootProject.mod_id}-neoforge-${rootProject.versionStr}.jar"
                 mixin "${rootProject.mod_id}.neoforge.mixins.json"
-                mixin "${rootProject.mod_id}.common.mixins.json"
             }
         }
         else { // hack to not let it merge automatically

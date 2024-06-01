@@ -23,13 +23,8 @@ issueTrackerURL = "${issues}"
     #// Allow any version to be present (or not) on the server
     acceptableRemoteVersions = "*"
 
-# FIXME: Forgix does some renaming...
-# FIXME: Forgix error: ClassNotFoundException:neode.the_build_craft.example_mod.neoforge.mixins.NeoforgeMixinPlugin
 [[mixins]]
     config = "${mod_id}.neoforge.mixins.json"
-
-[[mixins]]
-    config = "${mod_id}.common.mixins.json"
 
 [[dependencies.${mod_id}]]
     modId = "minecraft"

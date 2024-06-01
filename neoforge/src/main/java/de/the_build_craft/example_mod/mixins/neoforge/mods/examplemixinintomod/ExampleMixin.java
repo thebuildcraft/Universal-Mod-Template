@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package de.the_build_craft.example_mod.forge.mixins.mods.examplemixinintomod;
+package de.the_build_craft.example_mod.mixins.neoforge.mods.examplemixinintomod;
 
 public class ExampleMixin {
     // This isn't a real mixin, but if a mixin into a mod were to be created it would be like this

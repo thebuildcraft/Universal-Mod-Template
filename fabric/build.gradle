@@ -29,6 +29,9 @@ plugins {
 loom {
     accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.${mod_id}.accesswidener")
 
+    mixin {
+        useLegacyMixinAp = false
+    }
     // "runs" isn't required, but when we do need it then it can be useful
     runs {
         client {

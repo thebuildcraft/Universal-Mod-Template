@@ -46,8 +46,7 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfigs = [
-                "example_mod.forge.mixins.json",
-                "example_mod.common.mixins.json"
+                "${mod_id}.forge.mixins.json"
         ]
     }
 
