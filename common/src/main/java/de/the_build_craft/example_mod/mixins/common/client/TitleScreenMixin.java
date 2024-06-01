@@ -46,7 +46,6 @@ public class TitleScreenMixin {
     @Inject(method = "<init>(Z)V", at = @At("RETURN"))
     private void setEasterEgg(CallbackInfo ci) {
         this.showEasterEgg = true; // Minceraft!
-        LoggerFactory.getLogger("RemotePlayers - TitleScreenMixin").info("setEasterEgg");
     }
 }
 #else

@@ -43,7 +43,6 @@ public class ForgeMixinPlugin implements IMixinConfigPlugin
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
 	{
-		LoggerFactory.getLogger("RemotePlayers - MixinPlugin").info("mixinClassName: " + mixinClassName);
 		if (!this.firstRun) {
 			try {
 				Class<?> cls = Class.forName("net.neoforged.fml.common.Mod"); // Check if a NeoForge exclusive class exists
@@ -71,9 +70,7 @@ public class ForgeMixinPlugin implements IMixinConfigPlugin
 	
 	
 	@Override
-	public void onLoad(String mixinPackage) {
-		LoggerFactory.getLogger("RemotePlayers - MixinPlugin").info("mixinPackage: " + mixinPackage);
-	}
+	public void onLoad(String mixinPackage) { }
 	
 	@Override
 	public String getRefMapperConfig() { return null; }
