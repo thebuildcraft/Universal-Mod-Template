@@ -358,9 +358,11 @@ subprojects { p ->
                                 "META-INF/mods.toml",
                                 "META-INF/neoforge.mods.toml",//for MC >= 1.20.5
                                 "plugin.yml",
+                                "pack.mcmeta",
 
                                 // The mixins for each of the loaders
-                                rootProject.mod_id + "."+ p.name +".fabricLike.mixins.json"
+                                //rootProject.mod_id + "." + p.name + ".fabricLike.mixins.json" TODO ????
+                                rootProject.mod_id + "." + p.name + ".mixins.json"
         ]
         def intoTargets = ["$buildDir/resources/main/"] // Location of the built resources folder
 

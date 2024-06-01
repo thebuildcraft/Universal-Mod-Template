@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 25.05.2024
+ * date: 01.06.2024
  */
 
 plugins {
@@ -37,7 +37,7 @@ architectury {
 
 loom {
     silentMojangMappingsLicense() // Shut the licencing warning
-    accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener")
+    accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.${mod_id}.accesswidener")
     mixin {
         useLegacyMixinAp = false
     }

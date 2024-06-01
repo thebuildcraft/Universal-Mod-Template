@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 27.05.2024
+ * date: 01.06.2024
  */
 
 plugins {
@@ -27,7 +27,7 @@ plugins {
 }
 
 minecraft {
-    accessWideners(project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener"))
+    accessWideners(project(":common").file("src/main/resources/${accessWidenerVersion}.${rootProject.mod_id}.accesswidener"))
     version(rootProject.minecraft_version)
 }
 

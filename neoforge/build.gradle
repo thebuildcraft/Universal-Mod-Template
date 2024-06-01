@@ -19,7 +19,7 @@
  *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * file changed by: Leander Knüttel
- * date: 20.05.2024
+ * date: 01.06.2024
  */
 
 plugins {
@@ -46,7 +46,7 @@ repositories {
 
 loom {
     silentMojangMappingsLicense() // Shut the licencing warning
-    accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.example_mod.accesswidener")
+    accessWidenerPath = project(":common").file("src/main/resources/${accessWidenerVersion}.${mod_id}.accesswidener")
 
     neoForge {
         //TODO can this all be removed ?????
@@ -90,7 +90,7 @@ remapJar {
     dependsOn shadowJar
 //    classifier null
 
-    atAccessWideners.add("example_mod.accesswidener")
+    atAccessWideners.add("${rootProject.mod_id}.accesswidener")
 }
 
 configurations {

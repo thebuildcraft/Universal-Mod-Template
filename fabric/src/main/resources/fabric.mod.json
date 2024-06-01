@@ -16,18 +16,18 @@
     "license": "${mod_license}",
     "icon": "assets/${mod_id}/icon.png",
     
-    "accessWidener": "example_mod.accesswidener",
+    "accessWidener": "${mod_id}.accesswidener",
     
     "environment": "*",
     "entrypoints": {
         "client": [
-            "de.the_build_craft.example_mod.fabric.FabricMain"
+            "${group}.fabric.FabricMain"
         ],
         "server": [
-            "de.the_build_craft.example_mod.fabric.FabricMain"
+            "${group}.fabric.FabricMain"
         ],
         "modmenu": [
-            "de.the_build_craft.example_mod.fabric.wrappers.ModMenuIntegration"
+            "${group}.fabric.wrappers.ModMenuIntegration"
         ]
     },
     
