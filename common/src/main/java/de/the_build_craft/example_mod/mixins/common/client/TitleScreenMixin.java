@@ -24,7 +24,6 @@ package de.the_build_craft.example_mod.mixins.common.client;
 import net.minecraft.client.gui.components.LogoRenderer;
 #endif
 import net.minecraft.client.gui.screens.TitleScreen;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
