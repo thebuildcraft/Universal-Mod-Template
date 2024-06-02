@@ -25,9 +25,8 @@ Maybe I overscoped a bit... but I will see how it goes :)
 7. [x] Text wrappers to make debugging commands easier to write
 8. [x] multi-loader and multi-version client and server commands
 9. [x] common mixins: in build.gradle: don't rename common to loaderCommon (does it work with Forgix then??)
-10. [ ] support: Bukkit, Paper, Sponge, Folia, Purpur, Spigot (is there mixin support in all of them?)
-11. [ ] rename everything:
-    1. [ ] put function in name: "example_mod_id", "Example Mod Name", ...
+10. [ ] mostly done... support: Bukkit, Paper, Sponge, Folia, Purpur, Spigot (is there mixin support in all of them?)
+11. [x] remove all possible hardcoded reference strings:
 12. [ ] make auto-copy and renaming script (include mode to change names if already modified); init **new** README with name (and state that this template was used); modify license notices (include that this template was used + what was used to make the template); .bat file that controls a gradle task and gets the parameters like the build.gradle gets the version...
 13. [ ] make autotest script:
     1. [ ] copy every .jar in compatible client or server <- configurable !
