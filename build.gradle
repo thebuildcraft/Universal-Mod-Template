@@ -402,6 +402,8 @@ subprojects { p ->
                 issues                       : mod_issues,
                 discord                      : mod_discord,
                 mod_license                  : mod_license,
+                neoforgeUpdateJSONURL        : neoforgeUpdateJSONURL,
+                forgeUpdateJSONURL           : forgeUpdateJSONURL,
 
                 minecraft_version            : minecraft_version,
                 compatible_minecraft_versions: compatible_minecraft_versions,

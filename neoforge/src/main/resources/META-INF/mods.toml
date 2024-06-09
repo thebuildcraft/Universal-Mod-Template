@@ -22,6 +22,7 @@ issueTrackerURL = "${issues}"
     side = "BOTH"
     #// Allow any version to be present (or not) on the server
     acceptableRemoteVersions = "*"
+    updateJSONURL = "${neoforgeUpdateJSONURL}"
 
 [[mixins]]
     config = "${mod_id}.neoforge.mixins.json"
