@@ -42,7 +42,7 @@ Maybe I overscoped a bit... but I will see how it goes :)
     4. [ ] changeable with commands: (on server: admins; on client: player; common on server and client)
     5. [ ] modmenu, catalogue, mod-loader stuff, and other mod list screens
     6. [ ] config in versions before Cloth and YACL ???
-15. [ ] implement Mod Publisher with Better F3 changelog system
+15. [ ] mostly done... implement Mod Publisher
 16. [ ] Logger Wrapper with an option to send to chat (with color: info = yellow/white?; warning = orange; error = red)
 17. [ ] work on every TODO and FIXME comment
 18. [ ] final cleanup pass & order functions: more important once to the top & change MC version to latest
@@ -63,7 +63,6 @@ Maybe I overscoped a bit... but I will see how it goes :)
 
 ## Code used / want to use:
 - [Disant Horizons](https://gitlab.com/jeseibel/distant-horizons): build scripts and project structure
-- [Better F3](https://github.com/TreyRuffy/BetterF3): changelog system
 - [Chunky](https://github.com/pop4959/Chunky): inspiration for plugin multi-loader setup
 
 ## Libraries in use / want to use:
