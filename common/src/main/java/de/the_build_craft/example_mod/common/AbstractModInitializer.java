@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author James Seibel
  * @author Leander Knüttel
- * @version 09.06.2024
+ * @version 02.07.2024
  */
 public abstract class AbstractModInitializer
 {
@@ -143,7 +143,7 @@ public abstract class AbstractModInitializer
 
 	public static void registerClientCommands(CommandDispatcher<CommandSourceStack> dispatcher){
 		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("client_example_command")
+		LiteralArgumentBuilder<CommandSourceStack> exampleCommand = literal("client_example_command")
 				.then(argument("example_string", StringArgumentType.word())
 						.then(argument("example_int", IntegerArgumentType.integer(0))
 								.executes(context -> {
@@ -153,14 +153,14 @@ public abstract class AbstractModInitializer
 									return 1;
 								})));
 		//remember to register it...
-		dispatcher.register(setAfkTimeCommand);
+		dispatcher.register(exampleCommand);
 
 		//register client commands here
 	}
 
 	public static void registerServerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean allOrDedicated) {
 		//Example Command
-		LiteralArgumentBuilder<CommandSourceStack> setAfkTimeCommand = literal("server_example_command")
+		LiteralArgumentBuilder<CommandSourceStack> exampleCommand = literal("server_example_command")
 				.then(argument("example_string", StringArgumentType.word())
 						.then(argument("example_int", IntegerArgumentType.integer(0))
 								.executes(context -> {
@@ -170,7 +170,7 @@ public abstract class AbstractModInitializer
 									return 1;
 								})));
 		//remember to register it...
-		dispatcher.register(setAfkTimeCommand);
+		dispatcher.register(exampleCommand);
 
 		//register server commands here
 	}
